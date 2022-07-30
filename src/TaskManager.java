@@ -173,11 +173,6 @@ public class TaskManager {
         }
     }
 
-    public void printEpicStatus(){
-        for(Epic name: epicMap.values()){
-            System.out.println(name.getEpicStatus());
-        }
-    }
 }
 
 
