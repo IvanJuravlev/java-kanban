@@ -4,12 +4,12 @@ public class Subtask extends Task {
 
     protected int epicId;
 
-    public Subtask(String taskName, String status, String description, int epicId) {
+    public Subtask(String taskName, TaskStatus status, String description, int epicId) {
         super(taskName, status, description);
         this.epicId = epicId;
     }
 
-    public String getSubtaskStatus(){
+    public TaskStatus getSubtaskStatus(){
         return status;
     }
 
@@ -38,7 +38,7 @@ public class Subtask extends Task {
         this.taskName = taskName;
     }
 
-    public void setSubtaskStatus(String status) {
+    public void setSubtaskStatus(TaskStatus status) {
         this.status = status;
     }
 

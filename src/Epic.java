@@ -6,7 +6,7 @@ public class Epic extends Task{
 
     ArrayList<Integer> subtasksId;
 
-    public Epic(String taskName, String status, String description) {
+    public Epic(String taskName, TaskStatus status, String description) {
         super(taskName, status, description);
         subtasksId = new ArrayList<>();
     }
@@ -19,7 +19,7 @@ public class Epic extends Task{
         return subtasksId;
     }
 
-    public String getEpicStatus(){
+    public TaskStatus getEpicStatus(){
         return status;
     }
 
@@ -38,7 +38,7 @@ public class Epic extends Task{
         this.taskName = taskName;
     }
 
-    public void setEpicStatus(String status) {
+    public void setEpicStatus(TaskStatus status) {
         this.status = status;
     }
 

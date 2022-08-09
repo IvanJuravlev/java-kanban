@@ -6,7 +6,10 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         printMenu();
         int userInput = scanner.nextInt();
-        TaskManager taskManager = new TaskManager();
+       // InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
+        TaskManager taskManager = new InMemoryTaskManager();
+
+
 
 
         while (userInput != 0) {
@@ -15,7 +18,7 @@ public class Main {
                     scanner.nextLine();
                     System.out.println("введите задачу");
                     String taskName = scanner.nextLine();
-                    String taskStatus = scanner.nextLine();
+                    TaskStatus taskStatus = TaskStatus.valueOf(scanner.nextLine());
                     String taskDescription = scanner.nextLine();
                     Task task = new Task(taskName, taskStatus, taskDescription);
                     taskManager.saveTask(task);
@@ -24,7 +27,7 @@ public class Main {
                     scanner.nextLine();
                     System.out.println("введите задачу");
                     String epicName = scanner.nextLine();
-                    String epicStatus = scanner.nextLine();
+                    TaskStatus epicStatus = TaskStatus.valueOf(scanner.nextLine());
                     String epicDescription = scanner.nextLine();
                     Epic epic = new Epic(epicName, epicStatus, epicDescription);
                     taskManager.saveEpic(epic);
@@ -33,7 +36,7 @@ public class Main {
                     scanner.nextLine();
                     System.out.println("введите задачу");
                     String subtaskName = scanner.nextLine();
-                    String subtaskStatus = scanner.nextLine();
+                    TaskStatus subtaskStatus = TaskStatus.valueOf(scanner.nextLine());
                     String subtaskDescription = scanner.nextLine();
                     int epicId = scanner.nextInt();
                     Subtask subtask = new Subtask(subtaskName, subtaskStatus, subtaskDescription, epicId);
@@ -48,7 +51,7 @@ public class Main {
                     break;
                 case 6:
                   int subtaskIdChanger = scanner.nextInt();
-                  Subtask subtask1 = new Subtask("нос", "DONE", "стол", 1);
+                  Subtask subtask1 = new Subtask("нос", TaskStatus.DONE, "стол", 1);
                   taskManager.changeSubtask(subtask1, subtaskIdChanger);
                     break;
                 case 7:
@@ -56,7 +59,11 @@ public class Main {
                    break;
                 case 8:
                     int epicIdFinder = scanner.nextInt();
-                    taskManager.finedEpicWithId(epicIdFinder);
+                    taskManager.getEpic(epicIdFinder);
+                    break;
+                case 9:
+                   // for()
+                    System.out.println(taskManager.getHistory());
                     break;
                 default:
                     System.out.println("Данная команда не поддерживается, введите одну из указанных команд");
@@ -79,5 +86,6 @@ public class Main {
             System.out.println("6 - Измеить Subtask");
             System.out.println("7 - Напечатать все задачи");
             System.out.println("8 - Найти Epic по ID");
+            System.out.println("9 - Вывести историю просмотров");
         }
 }
