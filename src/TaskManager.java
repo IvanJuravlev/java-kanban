@@ -1,15 +1,6 @@
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public interface TaskManager {
-
-    int generatorId = 0;
-
-  //  HashMap<Integer, Task> taskMap = new HashMap<>();
-  //  HashMap<Integer, Epic> epicMap = new HashMap<>();
-   // HashMap<Integer, Subtask> subtaskMap = new HashMap<>();
- //   List<Task> taskHistoryList = new ArrayList<>();
 
 
      void saveTask(Task task);
@@ -18,15 +9,7 @@ public interface TaskManager {
 
      void saveSubtask(Subtask subtask);
 
-   //  List<Task> getHistory();
-
-   //  void addTaskToHistory(Task task);
-
-     HistoryManager getHistoryManager();
-
-
-
-
+     List<Task> getHistory();
 
 
      void removeAllTasks();

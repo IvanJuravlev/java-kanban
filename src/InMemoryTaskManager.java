@@ -1,40 +1,33 @@
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
 
 
+
+        private final HistoryManager historyManager = Managers.getDefaultHistory();
         int generatorId = 0;
 
         HashMap<Integer, Task> taskMap = new HashMap<>();
         HashMap<Integer, Epic> epicMap = new HashMap<>();
         HashMap<Integer, Subtask> subtaskMap = new HashMap<>();
 
-        List<Task> taskHistoryList = new ArrayList<>();
 
-
-
-       @Override
-        public void addTaskToHistory(Task task){
-            if(taskHistoryList.size() == 10){
-                taskHistoryList.remove(0);
-                taskHistoryList.add(task);
-                } else{
-                taskHistoryList.add(task);
-            }
-        }
 
 
         @Override
-        public List<Task> getHistory(){
-            return taskHistoryList;
-        }
+        public List<Task> getHistory() {
+           return historyManager.getHistory();
+         }
+
+
 
         @Override
         public void saveTask(Task task) {
             task.setTaskId(++generatorId);
-            if(task.getTaskStatus().equals("NEW") || task.getTaskStatus().equals("DONE") || task.getTaskStatus().equals("IN PROGRESS")){
+            if(task.getTaskStatus().equals(TaskStatus.NEW)
+                    || task.getTaskStatus().equals(TaskStatus.DONE)
+                    || task.getTaskStatus().equals(TaskStatus.IN_PROGRESS)){
                 taskMap.put(task.getTaskId(), task);
             } else
                 System.out.println("Не корректный формат статуса задачи");
@@ -42,7 +35,9 @@ public class InMemoryTaskManager implements TaskManager {
         @Override
         public void saveEpic(Epic epic) {
             epic.setEpicId(++generatorId);
-            if (epic.getEpicStatus().equals("NEW") || epic.getEpicStatus().equals("DONE") || epic.getEpicStatus().equals("IN PROGRESS")){
+            if (epic.getEpicStatus().equals(TaskStatus.NEW)
+                    || epic.getEpicStatus().equals(TaskStatus.DONE)
+                    || epic.getEpicStatus().equals(TaskStatus.IN_PROGRESS)){
                 epicMap.put(epic.getEpicId(), epic);
             } else {
                 System.out.println("Не корректный формат статуса задачи");
@@ -52,7 +47,9 @@ public class InMemoryTaskManager implements TaskManager {
         @Override
         public void saveSubtask(Subtask subtask) {
             subtask.setSubtaskId(++generatorId);
-            if (subtask.getSubtaskStatus().equals("NEW") || subtask.getSubtaskStatus().equals("DONE") || subtask.getSubtaskStatus().equals("IN PROGRESS")){
+            if (subtask.getSubtaskStatus().equals(TaskStatus.NEW)
+                    || subtask.getSubtaskStatus().equals(TaskStatus.DONE)
+                    || subtask.getSubtaskStatus().equals(TaskStatus.IN_PROGRESS)){
                 subtaskMap.put(subtask.getSubtaskId(), subtask);
                 getEpic(subtask.getEpicId()).getSubtasksId().add(subtask.getSubtaskId());
                 changeEpicStatus(subtask.getEpicId());
@@ -87,7 +84,8 @@ public class InMemoryTaskManager implements TaskManager {
                 for(Integer newId : epicMap.keySet()){
                     if(id == newId){
                         epic = epicMap.get(id);
-                        addTaskToHistory(epicMap.get(id));
+                        historyManager.addTaskToHistory(epicMap.get(id));
+                       // Managers.getDefaultHistory().addTaskToHistory(epicMap.get(id));
                     }
                 }
             } return epic;
@@ -100,7 +98,8 @@ public class InMemoryTaskManager implements TaskManager {
                 for(Integer newId : subtaskMap.keySet()){
                     if(newId == id){
                         subtask = subtaskMap.get(id);
-                        addTaskToHistory(subtaskMap.get(id));
+                       // Managers.getDefaultHistory().addTaskToHistory(subtaskMap.get(id));
+                        historyManager.addTaskToHistory(subtaskMap.get(id));
                     }
                 }
             } return subtask;
@@ -114,7 +113,8 @@ public class InMemoryTaskManager implements TaskManager {
                 for (Integer newId : taskMap.keySet()){
                     if (newId == id) {
                         task = taskMap.get(id);
-                        addTaskToHistory(taskMap.get(id));
+                        //Managers.getDefaultHistory().addTaskToHistory(taskMap.get(id));
+                        historyManager.addTaskToHistory(taskMap.get(id));
                     }
                 }
             }
@@ -206,6 +206,11 @@ public class InMemoryTaskManager implements TaskManager {
                 System.out.println(name.getEpicName());
             }
         }
+
+       // @Override
+      //  public HistoryManager getHistoryManager(){
+      //     return historyManager;
+      //  }
 
     }
 
