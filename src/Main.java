@@ -20,12 +20,12 @@ public class Main {
                     Task task5 = new Task("Спринт5", TaskStatus.NEW, "учу");
                     Task task6 = new Task("Спринт6", TaskStatus.NEW, "учу");
 
-                    Epic epic1 = new Epic("Тренировка", TaskStatus.NEW, "Тренировка");
+                    Epic epic1 = new Epic("Тренировка1", TaskStatus.NEW, "Тренировка");
                     Epic epic2 = new Epic("Тренировка", TaskStatus.NEW, "Тренировка");
 
-                    Subtask subTask1 = new Subtask("Прийти в зал", TaskStatus.NEW, "переодеться", 7);
-                    Subtask subTask2 = new Subtask("Прийти в зал", TaskStatus.NEW, "переодеться", 7);
-                    Subtask subTask3 = new Subtask("Прийти в зал", TaskStatus.NEW, "переодеться", 7);
+                    Subtask subTask1 = new Subtask("Прийти в зал", TaskStatus.NEW, "переодеться", 8);
+                    Subtask subTask2 = new Subtask("Прийти в зал", TaskStatus.NEW, "переодеться", 8);
+                    Subtask subTask3 = new Subtask("Прийти в зал", TaskStatus.NEW, "переодеться", 8);
 
 
 
@@ -45,6 +45,8 @@ public class Main {
 
 
 
+
+
                     taskManager.getTask(1);
                     taskManager.getTask(2);
                     taskManager.getTask(3);
@@ -54,6 +56,8 @@ public class Main {
 
                     taskManager.getEpic(7);
                     taskManager.getEpic(8);
+
+
 
                     taskManager.getSubtask(9);
                     taskManager.getSubtask(10);
@@ -110,6 +114,11 @@ public class Main {
                     int epicIdFinder = scanner.nextInt();
                     System.out.println(taskManager.getTask(epicIdFinder));
                     break;
+                case 9:
+                    for (Task task : taskManager.getHistory()) {
+                        System.out.println(task);
+                    }
+                    break;
                 default:
                     System.out.println("Данная команда не поддерживается, введите одну из указанных команд");
                     break;
@@ -131,5 +140,6 @@ public class Main {
             System.out.println("6 - Измеить Subtask");
             System.out.println("7 - Напечатать все задачи");
             System.out.println("8 - Найти Epic по ID");
+            System.out.println("9 - Напечатать историю");
         }
 }

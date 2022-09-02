@@ -1,6 +1,7 @@
 import java.util.HashMap;
 import java.util.List;
 
+
 public class InMemoryTaskManager implements TaskManager {
 
 
@@ -8,9 +9,27 @@ public class InMemoryTaskManager implements TaskManager {
         private final HistoryManager historyManager = Managers.getDefaultHistory();
         int generatorId = 0;
 
+
+
         HashMap<Integer, Task> taskMap = new HashMap<>();
         HashMap<Integer, Epic> epicMap = new HashMap<>();
         HashMap<Integer, Subtask> subtaskMap = new HashMap<>();
+
+
+//        public T getLast() {
+//            final Node<T> curTail = tail;
+//            if (curTail == null)
+//                throw new NoSuchElementException();
+//            return tail.data;
+//            // Реализуйте метод
+//        }
+
+//        public int size() {
+//            return this.size;
+//        }
+
+
+
 
 
 
@@ -71,10 +90,13 @@ public class InMemoryTaskManager implements TaskManager {
         public void removeWithId(int id){
             if(taskMap.containsKey(id)){
                 taskMap.remove(id);
+                historyManager.remove(taskMap.get(id));
             } else if (epicMap.containsKey(id)){
                 epicMap.remove(id);
+                historyManager.remove(epicMap.get(id));
             } else if (subtaskMap.containsKey(id)) {
                 subtaskMap.remove(id);
+                historyManager.remove(subtaskMap.get(id));
             } else System.out.println("такого ID не существует");
         }
         @Override
@@ -85,7 +107,7 @@ public class InMemoryTaskManager implements TaskManager {
                     if(id == newId){
                         epic = epicMap.get(id);
                         historyManager.addTaskToHistory(epicMap.get(id));
-                       // Managers.getDefaultHistory().addTaskToHistory(epicMap.get(id));
+
                     }
                 }
             } return epic;
@@ -98,7 +120,6 @@ public class InMemoryTaskManager implements TaskManager {
                 for(Integer newId : subtaskMap.keySet()){
                     if(newId == id){
                         subtask = subtaskMap.get(id);
-                       // Managers.getDefaultHistory().addTaskToHistory(subtaskMap.get(id));
                         historyManager.addTaskToHistory(subtaskMap.get(id));
                     }
                 }
@@ -113,7 +134,6 @@ public class InMemoryTaskManager implements TaskManager {
                 for (Integer newId : taskMap.keySet()){
                     if (newId == id) {
                         task = taskMap.get(id);
-                        //Managers.getDefaultHistory().addTaskToHistory(taskMap.get(id));
                         historyManager.addTaskToHistory(taskMap.get(id));
                     }
                 }

@@ -6,9 +6,17 @@ public interface HistoryManager {
 
    // List<Task> taskHistoryList = new ArrayList<>();
 
-    void addTaskToHistory(Task task);
+   // void removeNode(Integer id);
+
+   // void linkLast(Task task);
+
+   // void removeNode(int id);
 
      List<Task> getHistory();
+
+     void remove(Task task);
+
+    void addTaskToHistory(Task task);
 
 
 }
