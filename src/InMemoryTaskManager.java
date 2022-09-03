@@ -16,21 +16,6 @@ public class InMemoryTaskManager implements TaskManager {
         HashMap<Integer, Subtask> subtaskMap = new HashMap<>();
 
 
-//        public T getLast() {
-//            final Node<T> curTail = tail;
-//            if (curTail == null)
-//                throw new NoSuchElementException();
-//            return tail.data;
-//            // Реализуйте метод
-//        }
-
-//        public int size() {
-//            return this.size;
-//        }
-
-
-
-
 
 
 
@@ -226,11 +211,6 @@ public class InMemoryTaskManager implements TaskManager {
                 System.out.println(name.getEpicName());
             }
         }
-
-       // @Override
-      //  public HistoryManager getHistoryManager(){
-      //     return historyManager;
-      //  }
 
     }
 
