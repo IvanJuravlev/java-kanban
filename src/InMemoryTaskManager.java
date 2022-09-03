@@ -38,11 +38,11 @@ public class InMemoryTaskManager implements TaskManager {
         }
         @Override
         public void saveEpic(Epic epic) {
-            epic.setEpicId(++generatorId);
+            epic.setTaskId(++generatorId);
             if (epic.getEpicStatus().equals(TaskStatus.NEW)
                     || epic.getEpicStatus().equals(TaskStatus.DONE)
                     || epic.getEpicStatus().equals(TaskStatus.IN_PROGRESS)){
-                epicMap.put(epic.getEpicId(), epic);
+                epicMap.put(epic.getTaskId(), epic);
             } else {
                 System.out.println("Не корректный формат статуса задачи");
             }
@@ -50,12 +50,12 @@ public class InMemoryTaskManager implements TaskManager {
 
         @Override
         public void saveSubtask(Subtask subtask) {
-            subtask.setSubtaskId(++generatorId);
+            subtask.setTaskId(++generatorId);
             if (subtask.getSubtaskStatus().equals(TaskStatus.NEW)
                     || subtask.getSubtaskStatus().equals(TaskStatus.DONE)
                     || subtask.getSubtaskStatus().equals(TaskStatus.IN_PROGRESS)){
-                subtaskMap.put(subtask.getSubtaskId(), subtask);
-                getEpic(subtask.getEpicId()).getSubtasksId().add(subtask.getSubtaskId());
+                subtaskMap.put(subtask.getTaskId(), subtask);
+                getEpic(subtask.getEpicId()).getSubtasksId().add(subtask.getTaskId());
                 changeEpicStatus(subtask.getEpicId());
 
             } else {
@@ -75,13 +75,19 @@ public class InMemoryTaskManager implements TaskManager {
         public void removeWithId(int id){
             if(taskMap.containsKey(id)){
                 taskMap.remove(id);
-                historyManager.remove(taskMap.get(id));
+                historyManager.remove(id);
             } else if (epicMap.containsKey(id)){
+                List<Integer> epicSubtasks = epicMap.get(id).getSubtasksId();
+                for(int subtaskId  : epicSubtasks){
+                       subtaskMap.remove(subtaskId);
+                       historyManager.remove(subtaskId);
+                }
                 epicMap.remove(id);
-                historyManager.remove(epicMap.get(id));
+                historyManager.remove(id);
+
             } else if (subtaskMap.containsKey(id)) {
                 subtaskMap.remove(id);
-                historyManager.remove(subtaskMap.get(id));
+                historyManager.remove(id);
             } else System.out.println("такого ID не существует");
         }
         @Override

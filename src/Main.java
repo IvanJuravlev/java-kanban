@@ -14,7 +14,7 @@ public class Main {
             switch (userInput) {
                 case 1:
                     Task task1 = new Task("Спринт1", TaskStatus.NEW, "учу1");
-                    Task task2 = new Task("Спринт2", TaskStatus.NEW, "учу2");
+                   Task task2 = new Task("Спринт2", TaskStatus.NEW, "учу2");
                     Task task3 = new Task("Спринт3", TaskStatus.NEW, "учу3");
                     Task task4 = new Task("Спринт4", TaskStatus.NEW, "учу4");
                     Task task5 = new Task("Спринт5", TaskStatus.NEW, "учу5");
@@ -30,10 +30,10 @@ public class Main {
 
 
                     taskManager.saveTask(task1);
-                    taskManager.saveTask(task2);
-                    taskManager.saveTask(task3);
-                    taskManager.saveTask(task4);
-                    taskManager.saveTask(task5);
+                   taskManager.saveTask(task2);
+                   taskManager.saveTask(task3);
+                   taskManager.saveTask(task4);
+                   taskManager.saveTask(task5);
                     taskManager.saveTask(task6);
 
                    taskManager.saveEpic(epic1);
@@ -58,7 +58,6 @@ public class Main {
                     taskManager.getEpic(8);
 
 
-
                     taskManager.getSubtask(9);
                     taskManager.getSubtask(10);
                     taskManager.getSubtask(11);
@@ -68,13 +67,26 @@ public class Main {
                     System.out.println(task);
                     }
 
-//                    scanner.nextLine();
-//                    System.out.println("введите задачу");
-//                    String taskName = scanner.nextLine();
-//                    TaskStatus taskStatus = TaskStatus.valueOf(scanner.nextLine());
-//                    String taskDescription = scanner.nextLine();
-//                    Task task = new Task(taskName, taskStatus, taskDescription);
-//                    taskManager.saveTask(task);
+                    System.out.println("Вызываем в новой последовательности");
+
+                    taskManager.getSubtask(9);
+                    taskManager.getSubtask(10);
+                    taskManager.getEpic(7);
+                    taskManager.getEpic(8);
+                    taskManager.getSubtask(11);
+
+                    taskManager.getTask(1);
+                    taskManager.getTask(2);
+                    taskManager.getTask(3);
+                    taskManager.getTask(4);
+                    taskManager.getTask(5);
+                    taskManager.getTask(6);
+
+                    for (Task task : taskManager.getHistory()) {
+                        System.out.println(task);
+                    }
+
+
                     break;
                 case 2:
                     scanner.nextLine();

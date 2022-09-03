@@ -5,12 +5,6 @@ import java.util.List;
 public class InMemoryHistoryManager implements HistoryManager{
 
 
-
-    // private final CustomLinkedList<Task> historyList = new CustomLinkedList<>();
-
-   // private List<Task> taskHistoryList = historyList.getTasks();
-    private List<Task> taskHistoryList = new ArrayList<>();
-
     private final HashMap<Integer, Node<Task>> nodeHashMap = new HashMap<>();
 
 
@@ -33,8 +27,6 @@ public class InMemoryHistoryManager implements HistoryManager{
 
 
         public void removeNode(Node node){
-         // if (!nodeHashMap.isEmpty()) {
-             // Node node = nodeHashMap.remove(id);
 
                 if (node == null) {
                     return;
@@ -42,9 +34,9 @@ public class InMemoryHistoryManager implements HistoryManager{
                 if (node.prev != null) {
                     node.prev.next = node.next;
                     if (node.next != null) {
-                        last = node.prev;
-                    } else {
                         node.next.prev = node.prev;
+                    } else {
+                        last = node.prev;
                     }
                 } else {
                     first = node.next;
@@ -54,11 +46,9 @@ public class InMemoryHistoryManager implements HistoryManager{
                         first.prev = null;
                     }
                 }
-         // }
         }
 
 
-       // @Override
         public void linkLast(Task task) {
             Node<Task> node = new Node<>(last, task, null);
             if (first == null) {
@@ -70,10 +60,9 @@ public class InMemoryHistoryManager implements HistoryManager{
         }
 
 
-
     @Override
      public void addTaskToHistory(Task task){
-        remove(task);
+        remove(task.getTaskId());
         linkLast(task);
         nodeHashMap.put(task.getTaskId(), last);
 
@@ -81,17 +70,18 @@ public class InMemoryHistoryManager implements HistoryManager{
 
     @Override
     public List<Task> getHistory(){
-      //  taskHistoryList = historyList.getTasks();
         return getTasks();
     }
 
     @Override
-    public void remove(Task task){
-        if(nodeHashMap.containsKey(task.getTaskId())){
-            removeNode(nodeHashMap.get(task.getTaskId()));
-            nodeHashMap.remove(task.getTaskId());
+    public void remove(int id){
+        if (nodeHashMap.containsKey(id)){
+            Node deletedNode = nodeHashMap.remove(id);
+            removeNode(deletedNode);
+        }
+
         }
 
     }
 
-}
+

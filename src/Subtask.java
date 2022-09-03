@@ -1,6 +1,6 @@
 public class Subtask extends Task {
 
-    protected int subtaskId;
+  //  protected int subtaskId;
 
     protected int epicId;
 
@@ -21,9 +21,7 @@ public class Subtask extends Task {
         return taskName;
     }
 
-    public int getSubtaskId() {
-        return subtaskId;
-    }
+
 
     public int getEpicId() {
         return epicId;
@@ -46,8 +44,15 @@ public class Subtask extends Task {
         this.description = description;
     }
 
-    public void setSubtaskId(int taskId) {
-        this.subtaskId = taskId;
+    @Override
+    public String toString() {
+        return "Subtask{" +
+                "epicId=" + epicId +
+                ", taskName='" + taskName + '\'' +
+                ", status=" + status +
+                ", description='" + description + '\'' +
+                ", taskId=" + taskId +
+                '}';
     }
 
 }

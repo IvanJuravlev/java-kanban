@@ -45,4 +45,14 @@ public class Task {
     public void setTaskId(int taskId) {
         this.taskId = taskId;
     }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "taskName='" + taskName + '\'' +
+                ", status=" + status +
+                ", description='" + description + '\'' +
+                ", taskId=" + taskId +
+                '}';
+    }
 }
