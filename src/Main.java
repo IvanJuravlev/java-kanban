@@ -13,19 +13,19 @@ public class Main {
         while (userInput != 0) {
             switch (userInput) {
                 case 1:
-                    Task task1 = new Task("Спринт1", TaskStatus.NEW, "учу");
-                    Task task2 = new Task("Спринт2", TaskStatus.NEW, "учу");
-                    Task task3 = new Task("Спринт3", TaskStatus.NEW, "учу");
-                    Task task4 = new Task("Спринт4", TaskStatus.NEW, "учу");
-                    Task task5 = new Task("Спринт5", TaskStatus.NEW, "учу");
-                    Task task6 = new Task("Спринт6", TaskStatus.NEW, "учу");
-
-                    Epic epic1 = new Epic("Тренировка1", TaskStatus.NEW, "Тренировка");
-                    Epic epic2 = new Epic("Тренировка", TaskStatus.NEW, "Тренировка");
-
-                    Subtask subTask1 = new Subtask("Прийти в зал", TaskStatus.NEW, "переодеться", 8);
-                    Subtask subTask2 = new Subtask("Прийти в зал", TaskStatus.NEW, "переодеться", 8);
-                    Subtask subTask3 = new Subtask("Прийти в зал", TaskStatus.NEW, "переодеться", 8);
+                    Task task1 = new Task("Спринт1", TaskStatus.NEW, "учу1");
+                    Task task2 = new Task("Спринт2", TaskStatus.NEW, "учу2");
+                    Task task3 = new Task("Спринт3", TaskStatus.NEW, "учу3");
+                    Task task4 = new Task("Спринт4", TaskStatus.NEW, "учу4");
+                    Task task5 = new Task("Спринт5", TaskStatus.NEW, "учу5");
+                    Task task6 = new Task("Спринт6", TaskStatus.NEW, "учу6");
+//
+//                    Epic epic1 = new Epic("Тренировка1", TaskStatus.NEW, "Тренировка1");
+//                   Epic epic2 = new Epic("Тренировка2", TaskStatus.NEW, "Тренировка2");
+//
+//                   Subtask subTask1 = new Subtask("Прийти в зал1", TaskStatus.NEW, "переодеться1", 7);
+//                    Subtask subTask2 = new Subtask("Прийти в зал2", TaskStatus.NEW, "переодеться2", 7);
+//                    Subtask subTask3 = new Subtask("Прийти в зал3", TaskStatus.NEW, "переодеться3", 7);
 
 
 
@@ -36,12 +36,12 @@ public class Main {
                     taskManager.saveTask(task5);
                     taskManager.saveTask(task6);
 
-                    taskManager.saveEpic(epic1);
-                    taskManager.saveEpic(epic2);
-
-                    taskManager.saveSubtask(subTask1);
-                    taskManager.saveSubtask(subTask2);
-                    taskManager.saveSubtask(subTask3);
+//                   taskManager.saveEpic(epic1);
+//                   taskManager.saveEpic(epic2);
+//
+//                    taskManager.saveSubtask(subTask1);
+//                    taskManager.saveSubtask(subTask2);
+//                    taskManager.saveSubtask(subTask3);
 
 
 
@@ -54,14 +54,14 @@ public class Main {
                     taskManager.getTask(5);
                     taskManager.getTask(6);
 
-                    taskManager.getEpic(7);
-                    taskManager.getEpic(8);
-
-
-
-                    taskManager.getSubtask(9);
-                    taskManager.getSubtask(10);
-                    taskManager.getSubtask(11);
+//                    taskManager.getEpic(7);
+//                    taskManager.getEpic(8);
+//
+//
+//
+//                    taskManager.getSubtask(9);
+//                    taskManager.getSubtask(10);
+//                    taskManager.getSubtask(11);
 
 
                     for (Task task : taskManager.getHistory()) {

@@ -18,15 +18,6 @@ public class InMemoryHistoryManager implements HistoryManager{
 
 
     private  Node last;
-//@Override
-//    public void addTaskToHistory(Task task){
-//        taskHistoryList.add(task);
-//        if (taskHistoryList.size() > 10) {
-//            taskHistoryList.remove(0);
-//        }
-//    }
-
-
 
 
 
@@ -40,25 +31,10 @@ public class InMemoryHistoryManager implements HistoryManager{
             return taskArrayLinkedList;
         }
 
-//    public void removeNode(Node node) {
-//        if (node.equals(first)) {
-//            first = node.next;
-//            if (node.next != null) {
-//                node.next.prev = null;
-//            }
-//        } else {
-//            node.prev.next = node.next;
-//            if (node.next != null) {
-//                node.next.prev = node.prev;
-//
-//            }
-//        }
-//    }
 
-        // @Override
-        public void removeNode(Integer id) {
-            if (!nodeHashMap.isEmpty()) {
-                Node node = nodeHashMap.remove(id);
+        public void removeNode(Node node){
+         // if (!nodeHashMap.isEmpty()) {
+             // Node node = nodeHashMap.remove(id);
 
                 if (node == null) {
                     return;
@@ -78,7 +54,7 @@ public class InMemoryHistoryManager implements HistoryManager{
                         first.prev = null;
                     }
                 }
-            }
+         // }
         }
 
 
@@ -97,11 +73,10 @@ public class InMemoryHistoryManager implements HistoryManager{
 
     @Override
      public void addTaskToHistory(Task task){
-              remove(task);
-        //removeNode(nodeHashMap.remove(task.getTaskId()));
-        linkLast(task); // возможно ошибка тут
+        remove(task);
+        linkLast(task);
         nodeHashMap.put(task.getTaskId(), last);
-             // taskHistoryList.add(task)
+
     }
 
     @Override
@@ -113,18 +88,9 @@ public class InMemoryHistoryManager implements HistoryManager{
     @Override
     public void remove(Task task){
         if(nodeHashMap.containsKey(task.getTaskId())){
-            removeNode(task.getTaskId());
+            removeNode(nodeHashMap.get(task.getTaskId()));
             nodeHashMap.remove(task.getTaskId());
         }
-
-//          Task taskToRemove = null;
-//          for(Node task : nodeHashMap.containsKey(id)) {
-//              if (id == node.task.getTaskId()) {
-//                  taskToRemove = nodeHashMap.get(id);
-//              }
-//          }
-//        nodeHashMap.remove(taskToRemove);
-//
 
     }
 
