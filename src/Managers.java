@@ -7,4 +7,8 @@ public class Managers {
     public static TaskManager getDefault() {
         return new InMemoryTaskManager();
     }
+
+    public static FileBackedTasksManager getDefaultFileManager(){
+        return new FileBackedTasksManager();
+    }
 }
