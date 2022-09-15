@@ -1,10 +1,11 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
-    private final static String Path = "resourses\\data.csv";  // тут надо с адресом поработать
+    private final static String PATH = "resourses\\data.csv";  // тут надо с адресом поработать
 
     FileBackedTasksManager manager = Managers.getDefaultFileManager();
 
@@ -63,7 +64,22 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return subtask;
     }
 
-    @Override
+     public void loadFromFile(){
+        try{
+            String[] lines = Files.readString(Path.of(PATH));
+            String[] separatedLines = lines.split("\n");
+
+
+        }
+
+     }
+
+     public void toString(){
+
+     }
+
+
+
 
 
 
