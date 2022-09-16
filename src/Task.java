@@ -6,11 +6,22 @@ public class Task {
     protected String description;
     protected int taskId;
 
+    protected TaskTypes taskType;
+
+
+    public Task(String taskName, String description, TaskStatus status){
+        this.taskName = taskName;
+        this.description = description;
+        this.status = status;
+        this.taskType = taskType.TASK;
+    }
+
 
     public Task(String taskName, TaskStatus status, String description) {
         this.taskName = taskName;
         this.status = status;
         this.description = description;
+        this.taskType = taskType.TASK;
 
     }
 
@@ -28,6 +39,10 @@ public class Task {
 
     public int getTaskId() {
         return taskId;
+    }
+
+    public TaskTypes getTaskType() {
+        return taskType;
     }
 
     public void setTaskName(String taskName) {

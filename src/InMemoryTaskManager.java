@@ -152,6 +152,7 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
 
+
         @Override
         public void changeSubtask(Subtask subtask, int id){
             for(Integer newId : subtaskMap.keySet()){

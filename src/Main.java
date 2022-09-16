@@ -131,6 +131,11 @@ public class Main {
                         System.out.println(task);
                     }
                     break;
+                case 10:
+                    Task task22 = new Task("Спринт1", TaskStatus.NEW, "учу1");
+                  //  System.out.println(taskManager.taskToString(task22));
+                    break;
+
                 default:
                     System.out.println("Данная команда не поддерживается, введите одну из указанных команд");
                     break;
@@ -153,5 +158,6 @@ public class Main {
             System.out.println("7 - Напечатать все задачи");
             System.out.println("8 - Найти Epic по ID");
             System.out.println("9 - Напечатать историю");
+            System.out.println(("10 - ТУ стринг"));
         }
 }
