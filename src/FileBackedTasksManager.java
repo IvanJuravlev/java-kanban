@@ -10,7 +10,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     private final static String PATH = "resources\\data.csv";  // тут надо с адресом поработать
 
-    FileBackedTasksManager manager = Managers.getDefaultFileManager();
 
 
     @Override
@@ -70,17 +69,25 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         try {
             String lines = Files.readString(Path.of(PATH));
             String[] separatedLines = lines.split("\n");
-            List<String> tasks = new ArrayList<>();
-            List<String> epics = new ArrayList<>();
-            List<String> subtasks = new ArrayList<>();
-            String historyLine = "";
-            boolean isTitle = true;
-            boolean isTask = true;
-            int maxId = 0;
-            int id;
-            for (int i = 0; i < lines.length(); i++) {
+            for(int i = 1; i < separatedLines.length; i++){
+                String taskLine = separatedLines[i];
+                String[] taskContent = taskLine.split(",");
+                if (taskContent[1].equals("TASK")){
+                    int id = Integer.parseInt(taskContent[0]);
 
+                }
             }
+//            List<String> tasks = new ArrayList<>();
+//            List<String> epics = new ArrayList<>();
+//            List<String> subtasks = new ArrayList<>();
+//            String historyLine = "";
+//            boolean isTitle = true;
+//            boolean isTask = true;
+//            int maxId = 0;
+//            int id;
+//            for (int i = 0; i < lines.length(); i++) {
+
+//            }
 
 
         } catch (IOException e) {
@@ -89,15 +96,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     }
 
-//     public void taskToString(){
-//        List<Task> tasksList = new ArrayList<>();
-//        StringBuilder stringBuilder = new StringBuilder();
-//        tasksList.addAll(taskMap.values());
-//        tasksList.addAll(epicMap.values());
-//        tasksList.addAll(subtaskMap.values());
-//
-//
-//     }
 
     public String taskToString(Task task) {
         return String.format("%s,%s,%s,%s,%s,%s",
@@ -111,6 +109,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         public void save () {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(PATH))) {
+                String historyId;
+                StringBuilder stringBuilder = new StringBuilder();
                 writer.write("id,type,name,status,description,epic\n");
 
                 for (Task task : taskMap.values()){
@@ -123,7 +123,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     writer.write(taskToString(subtask));
                 }
 
-                writer.write("\n");
+                writer.write("\n\n");
+
+                for (Task task : getHistory()){
+                    historyId = task.getTaskId() + ",";
+                    writer.write(historyId);
+                }
+
 
 
             } catch (IOException e) {
