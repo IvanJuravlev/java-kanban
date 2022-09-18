@@ -9,7 +9,8 @@ public class Task {
     protected TaskTypes taskType;
 
 
-    public Task(String taskName, String description, TaskStatus status){
+    public Task(int taskId, String taskName, String description, TaskStatus status, TaskTypes taskType){
+        this.taskId = taskId;
         this.taskName = taskName;
         this.description = description;
         this.status = status;

@@ -132,10 +132,15 @@ public class Main {
                     }
                     break;
                 case 10:
+
                     TaskManager taskManager2 = Managers.getDefaultFileManager();
-                    Task task22 = new Task("Спринт2", TaskStatus.NEW, "учу1");
-                    taskManager2.saveTask(task22);
-                    taskManager2.getTask(1);
+                    Epic epic5 = new Epic("Тренировка1", TaskStatus.NEW, "Тренировка1");
+                    Subtask subTask6 = new Subtask("Прийти в зал1", TaskStatus.NEW, "переодеться1", 1);
+                   // Task task22 = new Task("Спринт2", TaskStatus.NEW, "учу1");
+                    taskManager2.saveEpic(epic5);
+                    taskManager2.getEpic(1);
+                    taskManager2.saveSubtask(subTask6);
+                    taskManager2.getSubtask(2);
                   //  System.out.println(taskManager.taskToString(task22));
                     break;
 

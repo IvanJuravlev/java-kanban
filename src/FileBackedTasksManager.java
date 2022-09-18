@@ -1,6 +1,7 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -29,6 +30,41 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public void saveSubtask(Subtask subtask) {
         super.saveSubtask(subtask);
            save();
+    }
+
+    private static Task taskFromString(String[] taskString){
+        int id = Integer.parseInt(taskString[0]);
+        TaskTypes type = Enum.valueOf(TaskTypes.class, taskString[1]);
+        String taskName = taskString[2];
+        TaskStatus status = Enum.valueOf(TaskStatus.class, taskString[3]);
+        String description =taskString[4];
+
+        Task task = new Task(id, taskName, description, status, type);
+        return task;
+    }
+
+    private static Epic epicFromString(String[] taskString){
+        int id = Integer.parseInt(taskString[0]);
+        TaskTypes type = Enum.valueOf(TaskTypes.class, taskString[1]);
+        String taskName = taskString[2];
+        TaskStatus status = Enum.valueOf(TaskStatus.class, taskString[3]);
+        String description =taskString[4];
+
+
+        Epic epic = new Epic(id, taskName, status, description, type);
+        return epic;
+    }
+
+    private static Subtask subtaskFromString(String[] taskString){
+        int id = Integer.parseInt(taskString[0]);
+        TaskTypes type = Enum.valueOf(TaskTypes.class, taskString[1]);
+        String taskName = taskString[2];
+        TaskStatus status = Enum.valueOf(TaskStatus.class, taskString[3]);
+        String description =taskString[4];
+        int epicId = Integer.parseInt(taskString[5]);
+
+        Subtask subtask = new Subtask(id, taskName, status, description, type, epicId);
+        return subtask;
     }
 
 
@@ -69,11 +105,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         try {
             String lines = Files.readString(Path.of(PATH));
             String[] separatedLines = lines.split("\n");
+            int maxId = 0;
             for(int i = 1; i < separatedLines.length; i++){
                 String taskLine = separatedLines[i];
                 String[] taskContent = taskLine.split(",");
                 if (taskContent[1].equals("TASK")){
-                    int id = Integer.parseInt(taskContent[0]);
+
+
 
                 }
             }
@@ -96,15 +134,30 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     }
 
+    private String taskToString(Task task) {
+        String id = String.valueOf(task.getTaskId());
+        String type;
+        String name = task.getTaskName();
+        String status = String.valueOf(task.getTaskStatus());
+        String description = task.getTaskDescription();
+        String epic;
 
-    public String taskToString(Task task) {
-        return String.format("%s,%s,%s,%s,%s,%s",
-                task.getTaskId(),
-                task.getTaskType(),
-                task.getTaskName(),
-                task.getTaskStatus(),
-                task.getTaskDescription(), "");
+        if (task instanceof Epic) {
+            type = TaskTypes.EPIC.name();
+            epic = "";
+        } else if (task instanceof Subtask) {
+            type = TaskTypes.SUBTASK.name();
+            epic = String.valueOf(((Subtask) task).getEpicId());
+        } else {
+            type = TaskTypes.TASK.name();
+            epic = "";
+        }
+
+        return String.join(",", id, type, name, status, description, epic) + System.lineSeparator();
     }
+
+
+
 
 
         public void save () {
