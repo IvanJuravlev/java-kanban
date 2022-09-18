@@ -1,13 +1,14 @@
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
+
+    final FileBackedTasksManager tasksManager = new FileBackedTasksManager();
 
     private final static String PATH = "resources\\data.csv";  // тут надо с адресом поработать
 
@@ -101,7 +102,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return subtask;
     }
 
-    public void loadFromFile() {
+
+    public void loadFromFile() throws FileNotFoundException {
+        List<Integer> historyList = new ArrayList<>();
+        Map<Integer, Task> historyMap = new HashMap<>();
         try {
             String lines = Files.readString(Path.of(PATH));
             String[] separatedLines = lines.split("\n");
@@ -109,29 +113,60 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             for(int i = 1; i < separatedLines.length; i++){
                 String taskLine = separatedLines[i];
                 String[] taskContent = taskLine.split(",");
-                if (taskContent[1].equals("TASK")){
+                String typeTask = taskContent[1];
 
-
+                switch (typeTask){
+                    case "TASK" :
+                        Task task = taskFromString(taskContent);
+                        tasksManager.taskMap.put(task.getTaskId(), task);
+                        historyMap.put(task.getTaskId(), task);
+                        if(task.getTaskId() > maxId){
+                            maxId = task.getTaskId();
+                        }
+                        break;
+                    case "EPIC" :
+                        Epic epic = epicFromString(taskContent);
+                        tasksManager.epicMap.put(epic.getTaskId(), epic);
+                        historyMap.put(epic.getTaskId(), epic);
+                        if(epic.getTaskId() > maxId){
+                            maxId = epic.getTaskId();
+                        }
+                        break;
+                    case "SUBTASK" :
+                        Subtask subtask = subtaskFromString(taskContent);
+                        tasksManager.subtaskMap.put(subtask.getTaskId(), subtask);
+                        historyMap.put(subtask.getTaskId(), subtask);
+                        if(subtask.getTaskId() > maxId){
+                            maxId = subtask.getTaskId();
+                        }
+                }
+                if(taskLine.isEmpty()){
+                    taskLine = separatedLines[i + 1];
+                    historyList = historyFromString(taskLine);
+                    for (Integer id : historyList) {
+                        for (Task task : historyMap.values()){
+                            if(task.getTaskId() == id){
+                                historyManager.addTaskToHistory(task);
+                            }
+                        }
+                    }
 
                 }
-            }
-//            List<String> tasks = new ArrayList<>();
-//            List<String> epics = new ArrayList<>();
-//            List<String> subtasks = new ArrayList<>();
-//            String historyLine = "";
-//            boolean isTitle = true;
-//            boolean isTask = true;
-//            int maxId = 0;
-//            int id;
-//            for (int i = 0; i < lines.length(); i++) {
-
-//            }
-
+            } setIdCounter(maxId);
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileNotFoundException("Невозможно прочитать файл");
         }
 
+    }
+
+    public static List<Integer> historyFromString(String history) {
+        List<Integer> historyList = new ArrayList<>();
+        String[] historyValue = history.split(",");
+        for (String line : historyValue) {
+            historyList.add(Integer.parseInt(line));
+        }
+        return historyList;
     }
 
     private String taskToString(Task task) {

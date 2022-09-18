@@ -6,8 +6,9 @@ public class InMemoryTaskManager implements TaskManager {
 
 
 
-        private final HistoryManager historyManager = Managers.getDefaultHistory();
-        int generatorId = 0;
+        protected final HistoryManager historyManager = Managers.getDefaultHistory();
+
+        static int idCounter = 0;
 
 
 
@@ -15,6 +16,15 @@ public class InMemoryTaskManager implements TaskManager {
         HashMap<Integer, Epic> epicMap = new HashMap<>();
         HashMap<Integer, Subtask> subtaskMap = new HashMap<>();
 
+
+
+    public static int getIdCounter() {
+        return idCounter;
+    }
+
+    public static void setIdCounter(int idCounter) {
+        InMemoryTaskManager.idCounter = idCounter;
+    }
 
 
 
@@ -28,7 +38,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         @Override
         public void saveTask(Task task) {
-            task.setTaskId(++generatorId);
+            task.setTaskId(++idCounter);
             if(task.getTaskStatus().equals(TaskStatus.NEW)
                     || task.getTaskStatus().equals(TaskStatus.DONE)
                     || task.getTaskStatus().equals(TaskStatus.IN_PROGRESS)){
@@ -38,7 +48,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         @Override
         public void saveEpic(Epic epic) {
-            epic.setTaskId(++generatorId);
+            epic.setTaskId(++idCounter);
             if (epic.getEpicStatus().equals(TaskStatus.NEW)
                     || epic.getEpicStatus().equals(TaskStatus.DONE)
                     || epic.getEpicStatus().equals(TaskStatus.IN_PROGRESS)){
@@ -50,7 +60,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         @Override
         public void saveSubtask(Subtask subtask) {
-            subtask.setTaskId(++generatorId);
+            subtask.setTaskId(++idCounter);
             if (subtask.getSubtaskStatus().equals(TaskStatus.NEW)
                     || subtask.getSubtaskStatus().equals(TaskStatus.DONE)
                     || subtask.getSubtaskStatus().equals(TaskStatus.IN_PROGRESS)){
