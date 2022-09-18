@@ -1,6 +1,2 @@
 id,type,name,status,description,epic
-1,EPIC,Тренировка1,IN_PROGRESS,Тренировка1,
-2,SUBTASK,Прийти в зал1,NEW,переодеться1,1
 
-
-1,2,

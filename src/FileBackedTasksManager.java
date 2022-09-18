@@ -1,14 +1,82 @@
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
-    final FileBackedTasksManager tasksManager = new FileBackedTasksManager();
+   // FileBackedTasksManager manager = new FileBackedTasksManager();
+
+    public static void main(String[] args) throws FileNotFoundException {
+        FileBackedTasksManager manager = Managers.getDefaultFileManager();
+
+//================================================================================
+        Task task1 = new Task("Спринт1", TaskStatus.NEW, "учу1");
+        Task task2 = new Task("Спринт2", TaskStatus.NEW, "учу2");
+        Task task3 = new Task("Спринт3", TaskStatus.NEW, "учу3");
+        Task task4 = new Task("Спринт4", TaskStatus.NEW, "учу4");
+        Task task5 = new Task("Спринт5", TaskStatus.NEW, "учу5");
+        Task task6 = new Task("Спринт6", TaskStatus.NEW, "учу6");
+
+        Epic epic1 = new Epic("Тренировка1", TaskStatus.NEW, "Тренировка1");
+        Epic epic2 = new Epic("Тренировка2", TaskStatus.NEW, "Тренировка2");
+
+        Subtask subTask1 = new Subtask("Прийти в зал1", TaskStatus.NEW, "переодеться1", 7);
+        Subtask subTask2 = new Subtask("Прийти в зал2", TaskStatus.NEW, "переодеться2", 7);
+        Subtask subTask3 = new Subtask("Прийти в зал3", TaskStatus.NEW, "переодеться3", 7);
+
+
+
+        manager.saveTask(task1);
+        manager.saveTask(task2);
+        manager.saveTask(task3);
+        manager.saveTask(task4);
+        manager.saveTask(task5);
+        manager.saveTask(task6);
+
+        manager.saveEpic(epic1);
+        manager.saveEpic(epic2);
+
+        manager.saveSubtask(subTask1);
+        manager.saveSubtask(subTask2);
+        manager.saveSubtask(subTask3);
+
+
+
+
+
+        manager.getTask(1);
+        manager.getTask(2);
+        manager.getTask(3);
+        manager.getTask(4);
+        manager.getTask(5);
+        manager.getTask(6);
+
+        manager.getEpic(7);
+        manager.getEpic(8);
+
+
+        manager.getSubtask(9);
+        manager.getSubtask(10);
+        manager.getSubtask(11);
+
+
+      //  manager.saveTask(new Task("Погладить кота",TaskStatus.NEW,  "поймать его"));
+//        manager.removeWithId(7);
+//        manager.removeWithId(3);
+//        manager.removeWithId(4);
+//        manager.removeWithId(5);
+//        manager.removeWithId(6);
+        System.out.println(manager);
+        //manager.loadFromFile();
+
+        FileBackedTasksManager fileBackedTasksManager2 = new FileBackedTasksManager();
+        fileBackedTasksManager2.loadFromFile("resources\\data.csv");
+        System.out.println(fileBackedTasksManager2.getTask(1));
+       // fileBackedTasksManager2.printAllTasks();
+    }
+
+
 
     private final static String PATH = "resources\\data.csv";  // тут надо с адресом поработать
 
@@ -62,6 +130,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         String taskName = taskString[2];
         TaskStatus status = Enum.valueOf(TaskStatus.class, taskString[3]);
         String description =taskString[4];
+       // int epicId;
+     //   if(taskString[5].isEmpty()){
+
+       // }
         int epicId = Integer.parseInt(taskString[5]);
 
         Subtask subtask = new Subtask(id, taskName, status, description, type, epicId);
@@ -103,14 +175,18 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
 
-    public void loadFromFile() throws FileNotFoundException {
+
+
+    public FileBackedTasksManager loadFromFile(String file) throws FileNotFoundException {
+
+        FileBackedTasksManager tasksManager = new FileBackedTasksManager();
         List<Integer> historyList = new ArrayList<>();
         Map<Integer, Task> historyMap = new HashMap<>();
         try {
-            String lines = Files.readString(Path.of(PATH));
+            String lines = Files.readString(Path.of(file));
             String[] separatedLines = lines.split("\n");
             int maxId = 0;
-            for(int i = 1; i < separatedLines.length; i++){
+            for(int i = 1; i < separatedLines.length - 2; i++){
                 String taskLine = separatedLines[i];
                 String[] taskContent = taskLine.split(",");
                 String typeTask = taskContent[1];
@@ -158,6 +234,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             throw new FileNotFoundException("Невозможно прочитать файл");
         }
 
+        return tasksManager;
+
+
+
     }
 
     public static List<Integer> historyFromString(String history) {
@@ -187,8 +267,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             type = TaskTypes.TASK.name();
             epic = "";
         }
+        return String.format("%s,%s,%s,%s,%s,%s\n", id, type, name, status, description, epic);
 
-        return String.join(",", id, type, name, status, description, epic) + System.lineSeparator();
+
     }
 
 
@@ -211,7 +292,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     writer.write(taskToString(subtask));
                 }
 
-                writer.write("\n\n");
+                writer.write("\n");
 
                 for (Task task : getHistory()){
                     historyId = task.getTaskId() + ",";
