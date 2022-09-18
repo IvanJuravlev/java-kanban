@@ -6,7 +6,7 @@ public class InMemoryTaskManager implements TaskManager {
 
 
 
-        protected final HistoryManager historyManager = Managers.getDefaultHistory();
+        protected static final HistoryManager historyManager = Managers.getDefaultHistory();
 
         static int idCounter = 0;
 

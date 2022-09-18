@@ -2,15 +2,15 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.ArrayList;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
-   // FileBackedTasksManager manager = new FileBackedTasksManager();
 
     public static void main(String[] args) throws FileNotFoundException {
         FileBackedTasksManager manager = Managers.getDefaultFileManager();
 
-//================================================================================
+
         Task task1 = new Task("Спринт1", TaskStatus.NEW, "учу1");
         Task task2 = new Task("Спринт2", TaskStatus.NEW, "учу2");
         Task task3 = new Task("Спринт3", TaskStatus.NEW, "учу3");
@@ -24,7 +24,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         Subtask subTask1 = new Subtask("Прийти в зал1", TaskStatus.NEW, "переодеться1", 7);
         Subtask subTask2 = new Subtask("Прийти в зал2", TaskStatus.NEW, "переодеться2", 7);
         Subtask subTask3 = new Subtask("Прийти в зал3", TaskStatus.NEW, "переодеться3", 7);
-
 
 
         manager.saveTask(task1);
@@ -43,8 +42,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
 
 
-
-
         manager.getTask(1);
         manager.getTask(2);
         manager.getTask(3);
@@ -55,27 +52,29 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         manager.getEpic(7);
         manager.getEpic(8);
 
-
         manager.getSubtask(9);
         manager.getSubtask(10);
         manager.getSubtask(11);
 
 
-      //  manager.saveTask(new Task("Погладить кота",TaskStatus.NEW,  "поймать его"));
-//        manager.removeWithId(7);
-//        manager.removeWithId(3);
-//        manager.removeWithId(4);
-//        manager.removeWithId(5);
-//        manager.removeWithId(6);
-        System.out.println(manager);
-        //manager.loadFromFile();
+        FileBackedTasksManager fileBackedTasksManager2 = FileBackedTasksManager.loadFromFile("resources\\data.csv");
+        for(Task task : fileBackedTasksManager2.taskMap.values()) {
+              System.out.println(task);
+              }
+        for(Task task : fileBackedTasksManager2.epicMap.values()) {
+            System.out.println(task);
+        }
+        for(Task task : fileBackedTasksManager2.subtaskMap.values()) {
+            System.out.println(task);
+        }
 
-        FileBackedTasksManager fileBackedTasksManager2 = new FileBackedTasksManager();
-        fileBackedTasksManager2.loadFromFile("resources\\data.csv");
-        System.out.println(fileBackedTasksManager2.getTask(1));
-       // fileBackedTasksManager2.printAllTasks();
+        System.out.println("Печатаем историю");
+
+
+                for (Task task : fileBackedTasksManager2.getHistory()) {
+            System.out.println(task);
+        }
     }
-
 
 
     private final static String PATH = "resources\\data.csv";  // тут надо с адресом поработать
@@ -100,46 +99,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         super.saveSubtask(subtask);
            save();
     }
-
-    private static Task taskFromString(String[] taskString){
-        int id = Integer.parseInt(taskString[0]);
-        TaskTypes type = Enum.valueOf(TaskTypes.class, taskString[1]);
-        String taskName = taskString[2];
-        TaskStatus status = Enum.valueOf(TaskStatus.class, taskString[3]);
-        String description =taskString[4];
-
-        Task task = new Task(id, taskName, description, status, type);
-        return task;
-    }
-
-    private static Epic epicFromString(String[] taskString){
-        int id = Integer.parseInt(taskString[0]);
-        TaskTypes type = Enum.valueOf(TaskTypes.class, taskString[1]);
-        String taskName = taskString[2];
-        TaskStatus status = Enum.valueOf(TaskStatus.class, taskString[3]);
-        String description =taskString[4];
-
-
-        Epic epic = new Epic(id, taskName, status, description, type);
-        return epic;
-    }
-
-    private static Subtask subtaskFromString(String[] taskString){
-        int id = Integer.parseInt(taskString[0]);
-        TaskTypes type = Enum.valueOf(TaskTypes.class, taskString[1]);
-        String taskName = taskString[2];
-        TaskStatus status = Enum.valueOf(TaskStatus.class, taskString[3]);
-        String description =taskString[4];
-       // int epicId;
-     //   if(taskString[5].isEmpty()){
-
-       // }
-        int epicId = Integer.parseInt(taskString[5]);
-
-        Subtask subtask = new Subtask(id, taskName, status, description, type, epicId);
-        return subtask;
-    }
-
 
     @Override
     public void removeAllTasks() {
@@ -175,12 +134,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
 
-
-
-    public FileBackedTasksManager loadFromFile(String file) throws FileNotFoundException {
+    public static FileBackedTasksManager loadFromFile(String file) throws FileNotFoundException {
 
         FileBackedTasksManager tasksManager = new FileBackedTasksManager();
-        List<Integer> historyList = new ArrayList<>();
+        List<Integer> historyList;
         Map<Integer, Task> historyMap = new HashMap<>();
         try {
             String lines = Files.readString(Path.of(file));
@@ -215,6 +172,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                         if(subtask.getTaskId() > maxId){
                             maxId = subtask.getTaskId();
                         }
+                        break;
                 }
                 if(taskLine.isEmpty()){
                     taskLine = separatedLines[i + 1];
@@ -233,12 +191,46 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         } catch (IOException e) {
             throw new FileNotFoundException("Невозможно прочитать файл");
         }
-
         return tasksManager;
-
-
-
     }
+
+    private static Task taskFromString(String[] taskString){
+        int id = Integer.parseInt(taskString[0]);
+        TaskTypes type = Enum.valueOf(TaskTypes.class, taskString[1]);
+        String taskName = taskString[2];
+        TaskStatus status = Enum.valueOf(TaskStatus.class, taskString[3]);
+        String description =taskString[4];
+
+        Task task = new Task(id, taskName, description, status, type);
+        return task;
+    }
+
+
+    private static Epic epicFromString(String[] taskString){
+        int id = Integer.parseInt(taskString[0]);
+        TaskTypes type = Enum.valueOf(TaskTypes.class, taskString[1]);
+        String taskName = taskString[2];
+        TaskStatus status = Enum.valueOf(TaskStatus.class, taskString[3]);
+        String description =taskString[4];
+
+
+        Epic epic = new Epic(id, taskName, status, description, type);
+        return epic;
+    }
+
+
+    private static Subtask subtaskFromString(String[] taskString){
+        int id = Integer.parseInt(taskString[0]);
+        TaskTypes type = Enum.valueOf(TaskTypes.class, taskString[1]);
+        String taskName = taskString[2];
+        TaskStatus status = Enum.valueOf(TaskStatus.class, taskString[3]);
+        String description =taskString[4];
+        int epicId = Integer.parseInt(taskString[5]);
+
+        Subtask subtask = new Subtask(id, taskName, status, description, type, epicId);
+        return subtask;
+    }
+
 
     public static List<Integer> historyFromString(String history) {
         List<Integer> historyList = new ArrayList<>();
@@ -248,6 +240,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
         return historyList;
     }
+
 
     private String taskToString(Task task) {
         String id = String.valueOf(task.getTaskId());
@@ -268,18 +261,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             epic = "";
         }
         return String.format("%s,%s,%s,%s,%s,%s\n", id, type, name, status, description, epic);
-
-
     }
-
-
 
 
 
         public void save () {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(PATH))) {
                 String historyId;
-                StringBuilder stringBuilder = new StringBuilder();
                 writer.write("id,type,name,status,description,epic\n");
 
                 for (Task task : taskMap.values()){
@@ -299,11 +287,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     writer.write(historyId);
                 }
 
-
-
             } catch (IOException e) {
                 throw new ManagerSaveException("Ошибка записи файла");
             }
         }
+
     }
 
