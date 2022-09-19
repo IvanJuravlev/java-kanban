@@ -133,6 +133,16 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return subtask;
     }
 
+    public static int maxIdCounter(int id){
+        int maxId = 0;
+        if (maxId < id){
+            maxId = id;
+        }
+        return maxId;
+    }
+
+
+
 
     public static FileBackedTasksManager loadFromFile(String file) throws FileNotFoundException {
 
@@ -153,25 +163,23 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                         Task task = taskFromString(taskContent);
                         tasksManager.taskMap.put(task.getTaskId(), task);
                         historyMap.put(task.getTaskId(), task);
-                        if(task.getTaskId() > maxId){
-                            maxId = task.getTaskId();
-                        }
+                        maxId = maxIdCounter(task.getTaskId());
+
                         break;
                     case "EPIC" :
-                        Epic epic = epicFromString(taskContent);
+                        Epic epic = (Epic) taskFromString(taskContent);
                         tasksManager.epicMap.put(epic.getTaskId(), epic);
                         historyMap.put(epic.getTaskId(), epic);
-                        if(epic.getTaskId() > maxId){
-                            maxId = epic.getTaskId();
-                        }
+                        maxId = maxIdCounter(epic.getTaskId());
+
                         break;
                     case "SUBTASK" :
-                        Subtask subtask = subtaskFromString(taskContent);
+                        //Task tas2k = fromString(taskContent);
+                        Subtask subtask = (Subtask) taskFromString(taskContent);
                         tasksManager.subtaskMap.put(subtask.getTaskId(), subtask);
                         historyMap.put(subtask.getTaskId(), subtask);
-                        if(subtask.getTaskId() > maxId){
-                            maxId = subtask.getTaskId();
-                        }
+                        maxId = maxIdCounter(subtask.getTaskId());
+
                         break;
                 }
                 if(taskLine.isEmpty()){
@@ -194,41 +202,26 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return tasksManager;
     }
 
-    private static Task taskFromString(String[] taskString){
-        int id = Integer.parseInt(taskString[0]);
-        TaskTypes type = Enum.valueOf(TaskTypes.class, taskString[1]);
+
+    public static Task taskFromString(String[] taskString) {
+        int taskId = Integer.parseInt(taskString[0]);
+        TaskTypes taskType = TaskTypes.valueOf(taskString[1]);
         String taskName = taskString[2];
-        TaskStatus status = Enum.valueOf(TaskStatus.class, taskString[3]);
-        String description =taskString[4];
-
-        Task task = new Task(id, taskName, description, status, type);
-        return task;
-    }
-
-
-    private static Epic epicFromString(String[] taskString){
-        int id = Integer.parseInt(taskString[0]);
-        TaskTypes type = Enum.valueOf(TaskTypes.class, taskString[1]);
-        String taskName = taskString[2];
-        TaskStatus status = Enum.valueOf(TaskStatus.class, taskString[3]);
-        String description =taskString[4];
-
-
-        Epic epic = new Epic(id, taskName, status, description, type);
-        return epic;
-    }
-
-
-    private static Subtask subtaskFromString(String[] taskString){
-        int id = Integer.parseInt(taskString[0]);
-        TaskTypes type = Enum.valueOf(TaskTypes.class, taskString[1]);
-        String taskName = taskString[2];
-        TaskStatus status = Enum.valueOf(TaskStatus.class, taskString[3]);
-        String description =taskString[4];
-        int epicId = Integer.parseInt(taskString[5]);
-
-        Subtask subtask = new Subtask(id, taskName, status, description, type, epicId);
-        return subtask;
+        TaskStatus taskStatus = TaskStatus.valueOf(taskString[3]);
+        String taskDescription = taskString[4];
+        switch (taskType) {
+            case TASK:
+                Task task = new Task(taskId, taskName, taskDescription, taskStatus, taskType);
+                return task;
+            case EPIC:
+                Epic epic = new Epic(taskId, taskName, taskDescription, taskStatus, taskType);
+                return epic;
+            case SUBTASK:
+                int taskEpicId = Integer.parseInt(taskString[5]);
+                Subtask subTask = new Subtask(taskId, taskName, taskStatus, taskDescription, taskType, taskEpicId);
+                return subTask;
+        }
+        return null;
     }
 
 
