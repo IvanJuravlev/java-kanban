@@ -1,3 +1,7 @@
+package tasks;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class Task {
 
@@ -8,21 +12,30 @@ public class Task {
 
     protected TaskTypes taskType;
 
+    protected Duration duration;
 
-    public Task(int taskId, String taskName, String description, TaskStatus status, TaskTypes taskType){
+    protected LocalDateTime startTime;
+    protected LocalDateTime endTime;
+
+
+    public Task(int taskId, String taskName, String description, TaskStatus status, TaskTypes taskType, LocalDateTime startTime, Duration duration){
         this.taskId = taskId;
         this.taskName = taskName;
         this.description = description;
         this.status = status;
         this.taskType = taskType.TASK;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
 
-    public Task(String taskName, TaskStatus status, String description) {
+    public Task(String taskName, TaskStatus status, String description, LocalDateTime startTime, Duration duration) {
         this.taskName = taskName;
         this.status = status;
         this.description = description;
         this.taskType = taskType.TASK;
+        this.duration = duration;
+        this.startTime = startTime;
 
     }
 
@@ -62,9 +75,33 @@ public class Task {
         this.taskId = taskId;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
     @Override
     public String toString() {
-        return "Task{" +
+        return "tasks.Task{" +
                 "taskName='" + taskName + '\'' +
                 ", status=" + status +
                 ", description='" + description + '\'' +

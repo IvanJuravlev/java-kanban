@@ -6,26 +6,26 @@ public class Main {
 //        Scanner scanner = new Scanner(System.in);
 //        printMenu();
 //        int userInput = scanner.nextInt();
-//        TaskManager taskManager = Managers.getDefault();
+//        managers.TaskManager taskManager = managers.Managers.getDefault();
 //
 //
 //
 //        while (userInput != 0) {
 //            switch (userInput) {
 //                case 1:
-//                    Task task1 = new Task("Спринт1", TaskStatus.NEW, "учу1");
-//                   Task task2 = new Task("Спринт2", TaskStatus.NEW, "учу2");
-//                    Task task3 = new Task("Спринт3", TaskStatus.NEW, "учу3");
-//                    Task task4 = new Task("Спринт4", TaskStatus.NEW, "учу4");
-//                    Task task5 = new Task("Спринт5", TaskStatus.NEW, "учу5");
-//                    Task task6 = new Task("Спринт6", TaskStatus.NEW, "учу6");
+//                    tasks.Task task1 = new tasks.Task("Спринт1", tasks.TaskStatus.NEW, "учу1");
+//                   tasks.Task task2 = new tasks.Task("Спринт2", tasks.TaskStatus.NEW, "учу2");
+//                    tasks.Task task3 = new tasks.Task("Спринт3", tasks.TaskStatus.NEW, "учу3");
+//                    tasks.Task task4 = new tasks.Task("Спринт4", tasks.TaskStatus.NEW, "учу4");
+//                    tasks.Task task5 = new tasks.Task("Спринт5", tasks.TaskStatus.NEW, "учу5");
+//                    tasks.Task task6 = new tasks.Task("Спринт6", tasks.TaskStatus.NEW, "учу6");
 //
-//                    Epic epic1 = new Epic("Тренировка1", TaskStatus.NEW, "Тренировка1");
-//                   Epic epic2 = new Epic("Тренировка2", TaskStatus.NEW, "Тренировка2");
+//                    tasks.Epic epic1 = new tasks.Epic("Тренировка1", tasks.TaskStatus.NEW, "Тренировка1");
+//                   tasks.Epic epic2 = new tasks.Epic("Тренировка2", tasks.TaskStatus.NEW, "Тренировка2");
 //
-//                   Subtask subTask1 = new Subtask("Прийти в зал1", TaskStatus.NEW, "переодеться1", 7);
-//                    Subtask subTask2 = new Subtask("Прийти в зал2", TaskStatus.NEW, "переодеться2", 7);
-//                    Subtask subTask3 = new Subtask("Прийти в зал3", TaskStatus.NEW, "переодеться3", 7);
+//                   tasks.Subtask subTask1 = new tasks.Subtask("Прийти в зал1", tasks.TaskStatus.NEW, "переодеться1", 7);
+//                    tasks.Subtask subTask2 = new tasks.Subtask("Прийти в зал2", tasks.TaskStatus.NEW, "переодеться2", 7);
+//                    tasks.Subtask subTask3 = new tasks.Subtask("Прийти в зал3", tasks.TaskStatus.NEW, "переодеться3", 7);
 //
 //
 //
@@ -63,7 +63,7 @@ public class Main {
 //                    taskManager.getSubtask(11);
 //
 //
-//                    for (Task task : taskManager.getHistory()) {
+//                    for (tasks.Task task : taskManager.getHistory()) {
 //                    System.out.println(task);
 //                    }
 //
@@ -82,7 +82,7 @@ public class Main {
 //                    taskManager.getTask(5);
 //                    taskManager.getTask(6);
 //
-//                    for (Task task : taskManager.getHistory()) {
+//                    for (tasks.Task task : taskManager.getHistory()) {
 //                        System.out.println(task);
 //                    }
 //
@@ -92,19 +92,19 @@ public class Main {
 //                    scanner.nextLine();
 //                    System.out.println("введите задачу");
 //                    String epicName = scanner.nextLine();
-//                    TaskStatus epicStatus = TaskStatus.valueOf(scanner.nextLine());
+//                    tasks.TaskStatus epicStatus = tasks.TaskStatus.valueOf(scanner.nextLine());
 //                    String epicDescription = scanner.nextLine();
-//                    Epic epic = new Epic(epicName, epicStatus, epicDescription);
+//                    tasks.Epic epic = new tasks.Epic(epicName, epicStatus, epicDescription);
 //                    taskManager.saveEpic(epic);
 //                   break;
 //                case 3:
 //                    scanner.nextLine();
 //                   System.out.println("введите задачу");
 //                    String subtaskName = scanner.nextLine();
-//                    TaskStatus subtaskStatus = TaskStatus.valueOf(scanner.nextLine());
+//                    tasks.TaskStatus subtaskStatus = tasks.TaskStatus.valueOf(scanner.nextLine());
 //                    String subtaskDescription = scanner.nextLine();
 //                    int epicId = scanner.nextInt();
-//                    Subtask subtask = new Subtask(subtaskName, subtaskStatus, subtaskDescription, epicId);
+//                    tasks.Subtask subtask = new tasks.Subtask(subtaskName, subtaskStatus, subtaskDescription, epicId);
 //                    taskManager.saveSubtask(subtask);
 //                   break;
 //                case 4:
@@ -116,7 +116,7 @@ public class Main {
 //                    break;
 //                case 6:
 //                  int subtaskIdChanger = scanner.nextInt();
-//                  Subtask subtask1 = new Subtask("нос", TaskStatus.DONE, "стол", 1);
+//                  tasks.Subtask subtask1 = new tasks.Subtask("нос", tasks.TaskStatus.DONE, "стол", 1);
 //                  taskManager.changeSubtask(subtask1, subtaskIdChanger);
 //                    break;
 //                case 7:
@@ -127,16 +127,16 @@ public class Main {
 //                    System.out.println(taskManager.getTask(epicIdFinder));
 //                    break;
 //                case 9:
-//                    for (Task task : taskManager.getHistory()) {
+//                    for (tasks.Task task : taskManager.getHistory()) {
 //                        System.out.println(task);
 //                    }
 //                    break;
 //                case 10:
 //
-//                    TaskManager taskManager2 = Managers.getDefaultFileManager();
-//                    Epic epic5 = new Epic("Тренировка1", TaskStatus.NEW, "Тренировка1");
-//                    Subtask subTask6 = new Subtask("Прийти в зал1", TaskStatus.NEW, "переодеться1", 1);
-//                   // Task task22 = new Task("Спринт2", TaskStatus.NEW, "учу1");
+//                    managers.TaskManager taskManager2 = managers.Managers.getDefaultFileManager();
+//                    tasks.Epic epic5 = new tasks.Epic("Тренировка1", tasks.TaskStatus.NEW, "Тренировка1");
+//                    tasks.Subtask subTask6 = new tasks.Subtask("Прийти в зал1", tasks.TaskStatus.NEW, "переодеться1", 1);
+//                   // tasks.Task task22 = new tasks.Task("Спринт2", tasks.TaskStatus.NEW, "учу1");
 //                    taskManager2.saveEpic(epic5);
 //                    taskManager2.getEpic(1);
 //                    taskManager2.saveSubtask(subTask6);
@@ -157,14 +157,14 @@ public class Main {
 //
 //
 //        public static void printMenu() {
-//            System.out.println("1 - Тест работы HistoryManager");
+//            System.out.println("1 - Тест работы managers.HistoryManager");
 //            System.out.println("2 - Создать Эпик");
 //            System.out.println("3 - Создать Сабтаск");
 //            System.out.println("4 - Удалить все задачи");
 //            System.out.println("5 - Удалить по номеру ID");
-//            System.out.println("6 - Измеить Subtask");
+//            System.out.println("6 - Измеить tasks.Subtask");
 //            System.out.println("7 - Напечатать все задачи");
-//            System.out.println("8 - Найти Epic по ID");
+//            System.out.println("8 - Найти tasks.Epic по ID");
 //            System.out.println("9 - Напечатать историю");
 //            System.out.println(("10 - тест сейва"));
 //        }

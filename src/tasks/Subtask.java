@@ -1,17 +1,22 @@
+package tasks;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Subtask extends Task {
 
   //  protected int subtaskId;
 
     protected int epicId;
 
-    public Subtask(String taskName, TaskStatus status, String description, int epicId) {
-        super(taskName, status, description);
+    public Subtask(String taskName, TaskStatus status, String description, int epicId, LocalDateTime startTime, Duration duration) {
+        super(taskName, status, description, startTime, duration);
         this.epicId = epicId;
       //  taskType = taskType.SUBTASK;
     }
 
-    public Subtask(int id, String taskName, TaskStatus status, String description, TaskTypes taskType, int epicId) {
-        super(id, taskName, description, status, taskType);
+    public Subtask(int id, String taskName, TaskStatus status, String description, TaskTypes taskType, int epicId, LocalDateTime startTime, Duration duration) {
+        super(id, taskName, description, status, taskType, startTime, duration);
         this.epicId = epicId;
         this.taskType = taskType.SUBTASK;
     }
@@ -53,7 +58,7 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "Subtask{" +
+        return "tasks.Subtask{" +
                 "epicId=" + epicId +
                 ", taskName='" + taskName + '\'' +
                 ", status=" + status +

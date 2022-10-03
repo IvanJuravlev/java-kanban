@@ -1,3 +1,10 @@
+package managers;
+
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
+import tasks.TaskStatus;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -180,22 +187,22 @@ public class InMemoryTaskManager implements TaskManager {
             int countDone = 0;
 
             for(Integer subtasks : subtaskMap.keySet()) {
-                if (getEpic(id).subtasksId.contains(subtasks)){
+                if (getEpic(id).getSubtasksId().contains(subtasks)){
                     if(subtaskMap.get(subtasks).getSubtaskStatus().equals("NEW")){
                         countNew++;
                     }
                 }
             }
             for(Integer subtasks : subtaskMap.keySet()) {
-                if (getEpic(id).subtasksId.contains(subtasks)){
+                if (getEpic(id).getSubtasksId().contains(subtasks)){
                     if(subtaskMap.get(subtasks).getSubtaskStatus().equals("DONE")){
                         countDone++;
                     }
                 }
             }
-            if (getEpic(id).subtasksId.isEmpty() || countNew == getEpic(id).subtasksId.size()){
+            if (getEpic(id).getSubtasksId().isEmpty() || countNew == getEpic(id).getSubtasksId().size()){
                 getEpic(id).setEpicStatus(TaskStatus.NEW);
-            } else if(countDone == getEpic(id).subtasksId.size()){
+            } else if(countDone == getEpic(id).getSubtasksId().size()){
                 getEpic(id).setEpicStatus(TaskStatus.DONE);
             } else {
                 getEpic(id).setEpicStatus(TaskStatus.IN_PROGRESS);
