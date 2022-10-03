@@ -48,6 +48,14 @@ public interface TaskManager {
 
      void printEpic();
 
+     void getSubtaskEndTime(Subtask subtask);
+
+     void getTaskEndTime(Task task);
+
+     void getEpicTimesAndDuration(Epic epic);
+
+
+
 }
 
 

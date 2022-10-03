@@ -4,9 +4,11 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 import tasks.TaskStatus;
+import tasks.TaskTypes;
 
 import java.util.HashMap;
 import java.util.List;
+import java.time.LocalDateTime;
 
 
 public class InMemoryTaskManager implements TaskManager {
@@ -79,6 +81,47 @@ public class InMemoryTaskManager implements TaskManager {
                 System.out.println("Не корректный формат статуса задачи");
             }
         }
+
+    @Override
+    public void getSubtaskEndTime(Subtask subtask) {
+        if (subtask.getStartTime() == null || subtask.getDuration() == null) return;
+        LocalDateTime endTime = subtask.getStartTime().plus(subtask.getDuration());
+        subtask.setEndTime(endTime);
+        if (epicMap.containsKey(subtask.getEpicId())) {
+            getEpicTimesAndDuration(epicMap.get(subtask.getEpicId()));
+        }
+    }
+
+    @Override
+    public void getTaskEndTime(Task task) {
+        if (task.getStartTime() == null || task.getDuration() == null) return;
+        LocalDateTime endTime = task.getStartTime().plus(task.getDuration());
+        task.setEndTime(endTime);
+    }
+
+    @Override
+    public void getEpicTimesAndDuration(Epic epic) {
+        if (epic.getSubtasksId().isEmpty()) {
+            return;
+        }
+        LocalDateTime start;
+        LocalDateTime end;
+        start = subEpicHash.get(epic.getSubtaskId().get(0)).getStartTime();
+        end = subEpicHash.get(epic.getSubtaskId().get(0)).getEndTime();
+        epic.setStartTime(start);
+        epic.setEndTime(end);
+        for (Integer id : epic.getSubtaskId()) {
+            if (subEpicHash.get(id).getStartTime() != null && subEpicHash.get(id).getStartTime().isBefore(start)) {
+                start = subEpicHash.get(id).getStartTime();
+            }
+            if (subEpicHash.get(id).getStartTime() != null && subEpicHash.get(id).getEndTime().isAfter(end)) {
+                end = subEpicHash.get(id).getEndTime();
+            }
+        }
+        epic.setStartTime(start);
+        epic.setEndTime(end);
+        epic.setDuration(Duration.between(epic.getStartTime(), epic.getEndTime()));
+    }
 
 
     @Override
