@@ -54,6 +54,8 @@ public interface TaskManager {
 
      void getEpicTimesAndDuration(Epic epic);
 
+     void timeIntersection();
+
 
 
 }

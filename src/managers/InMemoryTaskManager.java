@@ -4,11 +4,18 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 import tasks.TaskStatus;
+import exception.ManagerSaveException;
 import tasks.TaskTypes;
 
 import java.util.HashMap;
 import java.util.List;
 import java.time.LocalDateTime;
+import java.time.Duration;
+
+import java.time.Instant;
+import java.util.Set;
+import java.util.TreeSet;
+
 
 
 public class InMemoryTaskManager implements TaskManager {
@@ -24,6 +31,23 @@ public class InMemoryTaskManager implements TaskManager {
         HashMap<Integer, Task> taskMap = new HashMap<>();
         HashMap<Integer, Epic> epicMap = new HashMap<>();
         HashMap<Integer, Subtask> subtaskMap = new HashMap<>();
+
+    protected Set<Task> getPrioritizedTasks = new TreeSet<>((o1, o2) -> {
+        if (o1.getStartTime() == null && o2.getStartTime() == null) {
+            return o1.getTaskId() - o2.getTaskId();
+        } if (o1.getStartTime() == null){
+            return 1;
+        } if (o2.getStartTime() == null){
+            return -1;
+        } if (o1.getStartTime().isAfter(o2.getStartTime())) {
+            return 1;
+        } if (o1.getStartTime().isBefore(o2.getStartTime())){
+            return -1;
+        } if (o1.getStartTime().isEqual(o2.getStartTime())){
+            return o1.getTaskId() - o2.getTaskId();
+        }
+        return 0;
+    });
 
 
 
@@ -51,6 +75,8 @@ public class InMemoryTaskManager implements TaskManager {
             if(task.getTaskStatus().equals(TaskStatus.NEW)
                     || task.getTaskStatus().equals(TaskStatus.DONE)
                     || task.getTaskStatus().equals(TaskStatus.IN_PROGRESS)){
+                getTaskEndTime(task);
+                getPrioritizedTasks.add(task);
                 taskMap.put(task.getTaskId(), task);
             } else
                 System.out.println("Не корректный формат статуса задачи");
@@ -61,6 +87,7 @@ public class InMemoryTaskManager implements TaskManager {
             if (epic.getEpicStatus().equals(TaskStatus.NEW)
                     || epic.getEpicStatus().equals(TaskStatus.DONE)
                     || epic.getEpicStatus().equals(TaskStatus.IN_PROGRESS)){
+                getEpicTimesAndDuration(epic);
                 epicMap.put(epic.getTaskId(), epic);
             } else {
                 System.out.println("Не корректный формат статуса задачи");
@@ -73,6 +100,8 @@ public class InMemoryTaskManager implements TaskManager {
             if (subtask.getSubtaskStatus().equals(TaskStatus.NEW)
                     || subtask.getSubtaskStatus().equals(TaskStatus.DONE)
                     || subtask.getSubtaskStatus().equals(TaskStatus.IN_PROGRESS)){
+                getSubtaskEndTime(subtask);
+                getPrioritizedTasks.add(subtask);
                 subtaskMap.put(subtask.getTaskId(), subtask);
                 getEpic(subtask.getEpicId()).getSubtasksId().add(subtask.getTaskId());
                 changeEpicStatus(subtask.getEpicId());
@@ -104,22 +133,22 @@ public class InMemoryTaskManager implements TaskManager {
         if (epic.getSubtasksId().isEmpty()) {
             return;
         }
-        LocalDateTime start;
-        LocalDateTime end;
-        start = subEpicHash.get(epic.getSubtaskId().get(0)).getStartTime();
-        end = subEpicHash.get(epic.getSubtaskId().get(0)).getEndTime();
-        epic.setStartTime(start);
-        epic.setEndTime(end);
-        for (Integer id : epic.getSubtaskId()) {
-            if (subEpicHash.get(id).getStartTime() != null && subEpicHash.get(id).getStartTime().isBefore(start)) {
-                start = subEpicHash.get(id).getStartTime();
+        LocalDateTime startTime;
+        LocalDateTime endTime;
+        startTime = LocalDateTime.of(2000, 1, 1, 1, 1, 1);
+        endTime = LocalDateTime.of(3000, 1, 1, 1, 1, 1);
+        epic.setStartTime(startTime);
+        epic.setEndTime(endTime);
+        for (Integer id : epic.getSubtasksId()) {
+            if (subtaskMap.get(id).getStartTime() != null && subtaskMap.get(id).getStartTime().isBefore(startTime)) {
+                startTime = subtaskMap.get(id).getStartTime();
             }
-            if (subEpicHash.get(id).getStartTime() != null && subEpicHash.get(id).getEndTime().isAfter(end)) {
-                end = subEpicHash.get(id).getEndTime();
+            if (subtaskMap.get(id).getStartTime() != null && subtaskMap.get(id).getEndTime().isAfter(endTime)) {
+                endTime = subtaskMap.get(id).getEndTime();
             }
         }
-        epic.setStartTime(start);
-        epic.setEndTime(end);
+        epic.setStartTime(startTime);
+        epic.setEndTime(endTime);
         epic.setDuration(Duration.between(epic.getStartTime(), epic.getEndTime()));
     }
 
@@ -191,6 +220,25 @@ public class InMemoryTaskManager implements TaskManager {
             }
             return task;
         }
+
+    @Override
+    public void timeIntersection() {
+        LocalDateTime checkTime = null;
+        boolean flagCheckTimeIsEmpty = true;
+        for (Task task : getPrioritizedTasks) {
+            if (flagCheckTimeIsEmpty) {
+                checkTime = task.getEndTime();
+                flagCheckTimeIsEmpty = false;
+            } else if (task.getStartTime() != null) {
+                if (task.getStartTime().isBefore(checkTime)) {
+                    throw new ManagerSaveException("Найдено пересечение времени задач, проверьте корректность данных");
+                }
+                if (task.getStartTime().isAfter(checkTime) || task.getStartTime().isEqual(checkTime)) {
+                    checkTime = task.getEndTime();
+                }
+            }
+        }
+    }
 
 
 
