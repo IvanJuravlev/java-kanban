@@ -4,9 +4,12 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface TaskManager {
+
+     public HashMap<Integer, Task> getTaskMap();
 
 
      void saveTask(Task task);

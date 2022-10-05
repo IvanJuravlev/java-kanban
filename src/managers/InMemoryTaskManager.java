@@ -5,14 +5,12 @@ import tasks.Subtask;
 import tasks.Task;
 import tasks.TaskStatus;
 import exception.ManagerSaveException;
-import tasks.TaskTypes;
 
 import java.util.HashMap;
 import java.util.List;
 import java.time.LocalDateTime;
 import java.time.Duration;
 
-import java.time.Instant;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -31,6 +29,11 @@ public class InMemoryTaskManager implements TaskManager {
         HashMap<Integer, Task> taskMap = new HashMap<>();
         HashMap<Integer, Epic> epicMap = new HashMap<>();
         HashMap<Integer, Subtask> subtaskMap = new HashMap<>();
+
+        @Override
+        public HashMap<Integer, Task> getTaskMap(){
+            return taskMap;
+        }
 
     protected Set<Task> getPrioritizedTasks = new TreeSet<>((o1, o2) -> {
         if (o1.getStartTime() == null && o2.getStartTime() == null) {
