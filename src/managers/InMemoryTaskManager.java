@@ -6,14 +6,9 @@ import tasks.Task;
 import tasks.TaskStatus;
 import exception.ManagerSaveException;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.time.LocalDateTime;
 import java.time.Duration;
-
-import java.util.Set;
-import java.util.TreeSet;
-
 
 
 public class InMemoryTaskManager implements TaskManager {
@@ -22,7 +17,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         protected static final HistoryManager historyManager = Managers.getDefaultHistory();
 
-        static int idCounter = 0;
+        protected int idCounter = 0;
 
 
 
@@ -54,13 +49,13 @@ public class InMemoryTaskManager implements TaskManager {
 
 
 
-    public static int getIdCounter() {
+    public  int getIdCounter() {
         return idCounter;
     }
 
-    public static void setIdCounter(int idCounter) {
-        InMemoryTaskManager.idCounter = idCounter;
-    }
+//    public static void setIdCounter(int idCounter) {
+//        this.idCounter = idCounter;
+//    }
 
 
 
@@ -69,6 +64,13 @@ public class InMemoryTaskManager implements TaskManager {
         public List<Task> getHistory() {
            return historyManager.getHistory();
          }
+
+
+
+    public Map<Integer, Subtask> getSubtasks(){
+        return subtaskMap;
+    }
+
 
 
 
@@ -298,7 +300,7 @@ public class InMemoryTaskManager implements TaskManager {
                 getEpic(id).setEpicStatus(TaskStatus.NEW);
             } else if(countDone == getEpic(id).getSubtasksId().size()){
                 getEpic(id).setEpicStatus(TaskStatus.DONE);
-            } else {
+            } else if(countNew != getEpic(id).getSubtasksId().size() && countDone != getEpic(id).getSubtasksId().size()){
                 getEpic(id).setEpicStatus(TaskStatus.IN_PROGRESS);
             }
         }

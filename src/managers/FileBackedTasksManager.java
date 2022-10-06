@@ -202,7 +202,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     }
 
                 }
-            } setIdCounter(maxId);
+            } tasksManager.idCounter = maxId;
 
         } catch (IOException e) {
             throw new FileNotFoundException("Невозможно прочитать файл");

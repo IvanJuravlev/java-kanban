@@ -7,32 +7,28 @@ import tasks.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
  abstract class TaskManagerTest<T extends TaskManager> {
 
-    T manager;
 
-     protected abstract T createManager();
 
-    @BeforeEach
-    void getManager() {
-        manager = createManager();
-    }
+     protected T manager;
+
 
         @Test
         void updateEpicStatusBySubtasksTest() {
 
             //Test NEW
 
-            Epic epic1 = new Epic("Тренировка1", TaskStatus.DONE, "Тренировка1");
+            Epic epic1 = new Epic("Тренировка1", TaskStatus.NEW, "Тренировка1");
             manager.saveEpic(epic1);
             Subtask subTask1 = new Subtask("Прийти в зал1", TaskStatus.NEW, "переодеться1", 1,
                     LocalDateTime.of(2022, 9, 27, 13, 30, 15), Duration.ofMinutes(60));
             Subtask subTask2 = new Subtask("Прийти в зал2", TaskStatus.NEW, "переодеться2", 1,
-                    LocalDateTime.of(2022, 9, 27, 14, 30, 15), Duration.ofMinutes(50));
+                    LocalDateTime.of(2023, 9, 27, 14, 30, 15), Duration.ofMinutes(50));
             manager.saveSubtask(subTask1);
             manager.saveSubtask(subTask2);
 
@@ -44,9 +40,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
             Epic epic2 = new Epic("Тренировка1", TaskStatus.NEW, "Тренировка1");
             manager.saveEpic(epic2);
             Subtask subTask4 = new Subtask("Прийти в зал2", TaskStatus.DONE, "переодеться2", 4,
-                    LocalDateTime.of(2022, 9, 27, 14, 30, 15), Duration.ofMinutes(50));
+                    LocalDateTime.of(2024, 9, 27, 14, 30, 15), Duration.ofMinutes(50));
             Subtask subTask3 = new Subtask("Прийти в зал1", TaskStatus.DONE, "переодеться1", 4,
-                    LocalDateTime.of(2022, 9, 27, 13, 30, 15), Duration.ofMinutes(60));
+                    LocalDateTime.of(2025, 9, 27, 13, 30, 15), Duration.ofMinutes(60));
             manager.saveSubtask(subTask1);
             manager.saveSubtask(subTask2);
 
@@ -59,9 +55,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
             Epic epic3 = new Epic("Тренировка1", TaskStatus.NEW, "Тренировка1");
             manager.saveEpic(epic3);
             Subtask subTask5 = new Subtask("Прийти в зал2", TaskStatus.DONE, "переодеться2", 7,
-                    LocalDateTime.of(2022, 9, 27, 14, 30, 15), Duration.ofMinutes(50));
+                    LocalDateTime.of(2026, 9, 27, 14, 30, 15), Duration.ofMinutes(50));
             Subtask subTask6 = new Subtask("Прийти в зал1", TaskStatus.NEW, "переодеться1", 7,
-                    LocalDateTime.of(2022, 9, 27, 13, 30, 15), Duration.ofMinutes(60));
+                    LocalDateTime.of(2027, 9, 27, 13, 30, 15), Duration.ofMinutes(60));
             manager.saveSubtask(subTask5);
             manager.saveSubtask(subTask6);
 
@@ -81,9 +77,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
             Epic epic5 = new Epic("Тренировка1", TaskStatus.NEW, "Тренировка1");
             manager.saveEpic(epic3);
             Subtask subTask7 = new Subtask("Прийти в зал2", TaskStatus.IN_PROGRESS, "переодеться2", 11,
-                    LocalDateTime.of(2022, 9, 27, 14, 30, 15), Duration.ofMinutes(50));
+                    LocalDateTime.of(2028, 9, 27, 14, 30, 15), Duration.ofMinutes(50));
             Subtask subTask8 = new Subtask("Прийти в зал1", TaskStatus.IN_PROGRESS, "переодеться1", 11,
-                    LocalDateTime.of(2022, 9, 27, 13, 30, 15), Duration.ofMinutes(60));
+                    LocalDateTime.of(2029, 9, 27, 13, 30, 15), Duration.ofMinutes(60));
             manager.saveSubtask(subTask5);
             manager.saveSubtask(subTask6);
 
@@ -96,10 +92,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
     @Test
     void saveTaskAndGetTaskByIdTest() {
         Task task1 = new Task("Спринт1", TaskStatus.NEW, "учу1",
-                LocalDateTime.of(2022, 9, 25, 13, 30, 15), Duration.ofMinutes(20));
+                LocalDateTime.of(2020, 9, 25, 13, 30, 15), Duration.ofMinutes(20));
         manager.saveTask(task1);
         assertEquals(task1, manager.getTask(1));
     }
+
+     @Test
+     void SubtaskAndGetTaskByIdTest() {
+         Epic epic1 = new Epic(1, "Тренировка1", "Тренировка1", TaskStatus.DONE, TaskTypes.EPIC);
+         manager.saveEpic(epic1);
+         Subtask subTask1 = new Subtask( "Прийти в зал1", TaskStatus.NEW, "переодеться1", 1,
+                 LocalDateTime.of(2022, 10, 27, 13, 30, 15), Duration.ofMinutes(60));
+         manager.saveSubtask(subTask1);
+      //   assertFalse(manager.getSubtasks().isEmpty());
+      //   assertEquals(1, manager.getSubtasks().size());
+         assertEquals(subTask1, manager.getSubtask(2));
+     }
 
 
 
