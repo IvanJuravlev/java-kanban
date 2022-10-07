@@ -26,11 +26,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
       //  Task task5 = new Task("Спринт5", TaskStatus.NEW, "учу5", Duration.ofMinutes(20));
      //   Task task6 = new Task("Спринт6", TaskStatus.NEW, "учу6", Duration.ofMinutes(20));
 
-        Epic epic1 = new Epic("Тренировка1", TaskStatus.NEW, "Тренировка1");
+        Epic epic1 = new Epic("Тренировка1", TaskStatus.DONE, "Тренировка1");
         Epic epic2 = new Epic("Тренировка2", TaskStatus.NEW, "Тренировка2");
 
-        Subtask subTask1 = new Subtask("Прийти в зал1", TaskStatus.NEW, "переодеться1", 3, LocalDateTime.of(2022, 9, 27, 13, 30, 15), Duration.ofMinutes(60));
-        Subtask subTask2 = new Subtask("Прийти в зал2", TaskStatus.NEW, "переодеться2", 3, LocalDateTime.of(2022, 9, 27, 14, 30, 15), Duration.ofMinutes(50));
+        Subtask subTask1 = new Subtask("Прийти в зал1", TaskStatus.DONE, "переодеться1", 3, LocalDateTime.of(2022, 9, 27, 13, 30, 15), Duration.ofMinutes(60));
+        Subtask subTask2 = new Subtask("Прийти в зал2", TaskStatus.DONE, "переодеться2", 3, LocalDateTime.of(2022, 9, 27, 14, 30, 15), Duration.ofMinutes(50));
      //   Subtask subTask3 = new Subtask("Прийти в зал3", TaskStatus.NEW, "переодеться3", 7);
 
 

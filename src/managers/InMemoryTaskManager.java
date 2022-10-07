@@ -67,8 +67,17 @@ public class InMemoryTaskManager implements TaskManager {
 
 
 
-    public Map<Integer, Subtask> getSubtasks(){
+    public Map<Integer, Subtask> getSubtasksMap(){
         return subtaskMap;
+    }
+
+    public Map<Integer, Epic> getEpicsMap(){
+        return epicMap;
+    }
+
+    @Override
+    public Set<Task> getTasksTreeSet() {
+        return getPrioritizedTasks;
     }
 
 
@@ -92,7 +101,7 @@ public class InMemoryTaskManager implements TaskManager {
             if (epic.getEpicStatus().equals(TaskStatus.NEW)
                     || epic.getEpicStatus().equals(TaskStatus.DONE)
                     || epic.getEpicStatus().equals(TaskStatus.IN_PROGRESS)){
-                getEpicTimesAndDuration(epic);
+               // getEpicTimesAndDuration(epic);
                 epicMap.put(epic.getTaskId(), epic);
             } else {
                 System.out.println("Не корректный формат статуса задачи");
@@ -105,11 +114,13 @@ public class InMemoryTaskManager implements TaskManager {
             if (subtask.getSubtaskStatus().equals(TaskStatus.NEW)
                     || subtask.getSubtaskStatus().equals(TaskStatus.DONE)
                     || subtask.getSubtaskStatus().equals(TaskStatus.IN_PROGRESS)){
-                getSubtaskEndTime(subtask);
-                getPrioritizedTasks.add(subtask);
+
+               // getEpicTimesAndDuration(epicMap.get(subtask.getEpicId()));
                 subtaskMap.put(subtask.getTaskId(), subtask);
                 getEpic(subtask.getEpicId()).getSubtasksId().add(subtask.getTaskId());
                 changeEpicStatus(subtask.getEpicId());
+                getSubtaskEndTime(subtask);
+                getPrioritizedTasks.add(subtask);
 
             } else {
                 System.out.println("Не корректный формат статуса задачи");
@@ -140,11 +151,13 @@ public class InMemoryTaskManager implements TaskManager {
         }
         LocalDateTime startTime;
         LocalDateTime endTime;
-        startTime = LocalDateTime.of(2000, 1, 1, 1, 1, 1);
-        endTime = LocalDateTime.of(3000, 1, 1, 1, 1, 1);
+        startTime = LocalDateTime.MAX;
+        endTime = LocalDateTime.MIN;
         epic.setStartTime(startTime);
         epic.setEndTime(endTime);
+      //  Duration epicDuration = Duration.ofMinutes(0);
         for (Integer id : epic.getSubtasksId()) {
+          //  epicDuration = epicDuration.plus(subtaskMap.get(id).getDuration());
             if (subtaskMap.get(id).getStartTime() != null && subtaskMap.get(id).getStartTime().isBefore(startTime)) {
                 startTime = subtaskMap.get(id).getStartTime();
             }
@@ -278,32 +291,52 @@ public class InMemoryTaskManager implements TaskManager {
 
 
         @Override
-        public void changeEpicStatus(int id){
-            int countNew = 0;
-            int countDone = 0;
+        public void changeEpicStatus(int id) {
+            int numberOfSubTask = epicMap.get(id).getSubtasksId().size();
+            int counterStatusNew = 0;
+            int counterStatusDone = 0;
 
-            for(Integer subtasks : subtaskMap.keySet()) {
-                if (getEpic(id).getSubtasksId().contains(subtasks)){
-                    if(subtaskMap.get(subtasks).getSubtaskStatus().equals("NEW")){
-                        countNew++;
-                    }
+            List<Integer> subTaskKeys = epicMap.get(id).getSubtasksId();
+            for (Integer subTaskKey : subTaskKeys) {
+                if (subtaskMap.get(subTaskKey).getSubtaskStatus().equals(TaskStatus.NEW)) {
+                    counterStatusNew++;
+                } else if (subtaskMap.get(subTaskKey).getSubtaskStatus().equals(TaskStatus.DONE)) {
+                    counterStatusDone++;
                 }
             }
-            for(Integer subtasks : subtaskMap.keySet()) {
-                if (getEpic(id).getSubtasksId().contains(subtasks)){
-                    if(subtaskMap.get(subtasks).getSubtaskStatus().equals("DONE")){
-                        countDone++;
-                    }
-                }
-            }
-            if (getEpic(id).getSubtasksId().isEmpty() || countNew == getEpic(id).getSubtasksId().size()){
-                getEpic(id).setEpicStatus(TaskStatus.NEW);
-            } else if(countDone == getEpic(id).getSubtasksId().size()){
-                getEpic(id).setEpicStatus(TaskStatus.DONE);
-            } else if(countNew != getEpic(id).getSubtasksId().size() && countDone != getEpic(id).getSubtasksId().size()){
-                getEpic(id).setEpicStatus(TaskStatus.IN_PROGRESS);
+            if (counterStatusNew == numberOfSubTask) {
+                epicMap.get(id).setEpicStatus(TaskStatus.NEW);
+            } else if (counterStatusDone == numberOfSubTask) {
+                epicMap.get(id).setEpicStatus(TaskStatus.DONE);
+            } else {
+                epicMap.get(id).setEpicStatus(TaskStatus.IN_PROGRESS);
             }
         }
+//            int countNew = 0;
+//            int countDone = 0;
+//
+//            for (Integer subtasks : subtaskMap.keySet()) {
+//                if (getEpic(id).getSubtasksId().contains(subtasks)) {
+//                    if (subtaskMap.get(subtasks).getSubtaskStatus().equals("NEW")) {
+//                        countNew++;
+//                    }
+//                }
+//            }
+//            for (Integer subtasks : subtaskMap.keySet()) {
+//                if (getEpic(id).getSubtasksId().contains(subtasks)) {
+//                    if (subtaskMap.get(subtasks).getSubtaskStatus().equals("DONE")) {
+//                        countDone++;
+//                    }
+//                }
+//            }
+//            if (getEpic(id).getSubtasksId().isEmpty() || countNew == getEpic(id).getSubtasksId().size()) {
+//                getEpic(id).setEpicStatus(TaskStatus.NEW);
+//            } else if (countDone == getEpic(id).getSubtasksId().size()) {
+//                getEpic(id).setEpicStatus(TaskStatus.DONE);
+//            } else if (countNew != getEpic(id).getSubtasksId().size() && countDone != getEpic(id).getSubtasksId().size()) {
+//                getEpic(id).setEpicStatus(TaskStatus.IN_PROGRESS);
+//            }
+//        }
 
 
         @Override

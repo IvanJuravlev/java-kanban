@@ -1,11 +1,14 @@
 
 import managers.TaskManager;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -23,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
             //Test NEW
 
-            Epic epic1 = new Epic("Тренировка1", TaskStatus.NEW, "Тренировка1");
+            Epic epic1 = new Epic("Тренировка1", TaskStatus.IN_PROGRESS, "Тренировка1");
             manager.saveEpic(epic1);
             Subtask subTask1 = new Subtask("Прийти в зал1", TaskStatus.NEW, "переодеться1", 1,
                     LocalDateTime.of(2022, 9, 27, 13, 30, 15), Duration.ofMinutes(60));
@@ -43,8 +46,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
                     LocalDateTime.of(2024, 9, 27, 14, 30, 15), Duration.ofMinutes(50));
             Subtask subTask3 = new Subtask("Прийти в зал1", TaskStatus.DONE, "переодеться1", 4,
                     LocalDateTime.of(2025, 9, 27, 13, 30, 15), Duration.ofMinutes(60));
-            manager.saveSubtask(subTask1);
-            manager.saveSubtask(subTask2);
+            manager.saveSubtask(subTask3);
+            manager.saveSubtask(subTask4);
 
             TaskStatus status1 = manager.getEpic(4).getEpicStatus();
             assertEquals(TaskStatus.DONE, status1);
@@ -61,7 +64,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
             manager.saveSubtask(subTask5);
             manager.saveSubtask(subTask6);
 
-            TaskStatus status2 = manager.getEpic(4).getEpicStatus();
+            TaskStatus status2 = manager.getEpic(7).getEpicStatus();
             assertEquals(TaskStatus.IN_PROGRESS, status2);
 
             //Test without Subtasks
@@ -104,24 +107,103 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
          Subtask subTask1 = new Subtask( "Прийти в зал1", TaskStatus.NEW, "переодеться1", 1,
                  LocalDateTime.of(2022, 10, 27, 13, 30, 15), Duration.ofMinutes(60));
          manager.saveSubtask(subTask1);
-      //   assertFalse(manager.getSubtasks().isEmpty());
-      //   assertEquals(1, manager.getSubtasks().size());
          assertEquals(subTask1, manager.getSubtask(2));
      }
 
 
 
     @Test
-    void removeAllTasksTest() {
-        manager.saveTask(new Task("Спринт1", TaskStatus.NEW, "учу1",
-                LocalDateTime.of(2022, 9, 25, 13, 30, 15), Duration.ofMinutes(20)));
-        manager.saveTask(new Task("Спринт2", TaskStatus.NEW, "учу2",
-                LocalDateTime.of(2032, 9, 25, 13, 30, 15), Duration.ofMinutes(20)));
-        manager.removeAllTasks();
+    void removeAllTasksTest() { ///ПЕРЕПИСАТЬ!!!!!!!!!!
+        Task task1 = new Task("Спринт1", TaskStatus.NEW, "учу1",
+                LocalDateTime.of(2020, 9, 25, 13, 30, 15), Duration.ofMinutes(20));
+        manager.saveTask(task1);
+        Task task2 = new Task("Спринт2", TaskStatus.NEW, "учу2",
+                LocalDateTime.of(2020, 9, 25, 13, 55, 15), Duration.ofMinutes(20));
+        manager.saveTask(task2);
         assertTrue(manager.getTaskMap().isEmpty());
     }
 
+     @Test
+     void getEpicTimesAndDurationTest() {
+
+         Epic epic1 = new Epic("Тренировка1", TaskStatus.IN_PROGRESS, "Тренировка1");
+         manager.saveEpic(epic1);
+         Subtask subTask1 = new Subtask("Прийти в зал1", TaskStatus.NEW, "переодеться1", 1,
+                 LocalDateTime.of(2022, 9, 26, 21, 0), Duration.ofMinutes(30));
+         Subtask subTask2 = new Subtask("Прийти в зал2", TaskStatus.NEW, "переодеться2", 1,
+                 LocalDateTime.of(2022, 9, 26, 23, 0), Duration.ofMinutes(30));
+        manager.saveSubtask(subTask1);
+         manager.saveSubtask(subTask2);
+
+         assertEquals(manager.getEpicsMap().get(1).getStartTime(), manager.getSubtasksMap().get(2).getStartTime());
+         assertEquals(manager.getEpicsMap().get(1).getEndTime(), manager.getSubtasksMap().get(3).getEndTime());
+         assertEquals(Duration.ofMinutes(90), manager.getEpicsMap().get(1).getDuration());
+     }
 
 
-}
+     @Test
+     void ReturnPrioritizedTasksTest() {
+         Task task1 = new Task("Спринт1", TaskStatus.NEW, "учу1",
+                 LocalDateTime.of(2020, 9, 25, 13, 30, 15), Duration.ofMinutes(20));
+         manager.saveTask(task1);
+         Task task2 = new Task("Спринт2", TaskStatus.NEW, "учу2",
+                 LocalDateTime.of(2020, 9, 25, 13, 55, 15), Duration.ofMinutes(20));
+         manager.saveTask(task2);
+
+         Epic epic1 = new Epic("Тренировка1", TaskStatus.IN_PROGRESS, "Тренировка1");
+         manager.saveEpic(epic1);
+         Subtask subTask1 = new Subtask("Прийти в зал1", TaskStatus.NEW, "переодеться1", 3,
+                 LocalDateTime.of(2022, 9, 26, 21, 0), Duration.ofMinutes(30));
+         Subtask subTask2 = new Subtask("Прийти в зал2", TaskStatus.NEW, "переодеться2", 3,
+                 LocalDateTime.of(2022, 9, 26, 23, 0), Duration.ofMinutes(30));
+         manager.saveSubtask(subTask1);
+         manager.saveSubtask(subTask2);
+
+
+         List<Task> prioritizedTasks = new ArrayList<>();
+
+         prioritizedTasks.add(task2);
+         prioritizedTasks.add(subTask2);
+         prioritizedTasks.add(subTask1);
+         prioritizedTasks.add(task1);
+
+         int size = prioritizedTasks.size();
+
+         assertEquals(size, manager.getTasksTreeSet().size());
+
+     }
+
+     @Test
+     void getHistoryTest() {
+         Epic epic1 = new Epic("Тренировка1", TaskStatus.IN_PROGRESS, "Тренировка1");
+         manager.saveEpic(epic1);
+         Subtask subTask1 = new Subtask("Прийти в зал1", TaskStatus.NEW, "переодеться1", 1,
+                 LocalDateTime.of(2022, 9, 26, 21, 0), Duration.ofMinutes(30));
+         Subtask subTask2 = new Subtask("Прийти в зал2", TaskStatus.NEW, "переодеться2", 1,
+                 LocalDateTime.of(2022, 9, 26, 23, 0), Duration.ofMinutes(30));
+         manager.saveSubtask(subTask1);
+         manager.saveSubtask(subTask2);
+
+         manager.getEpic(1);
+         manager.getSubtask(2);
+         manager.getSubtask(3);
+
+         List<Task> taskList1 = new ArrayList<>(List.of(epic1, subTask1, subTask2));
+         List<Task> taskList2 = new ArrayList<>(List.of(epic1, subTask1, epic1, subTask2));
+
+         assertEquals(taskList1.size(), manager.getHistory().size());
+         assertNotEquals(taskList2.size(), manager.getHistory().size());
+
+         assertEquals(taskList1, manager.getHistory());
+         assertNotEquals(taskList2, manager.getHistory());
+     }
+
+     }
+
+
+
+
+
+
+
 

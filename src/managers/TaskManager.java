@@ -7,6 +7,7 @@ import tasks.Task;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface TaskManager {
 
@@ -15,7 +16,11 @@ public interface TaskManager {
 
      void saveTask(Task task);
 
-     Map<Integer, Subtask> getSubtasks();
+     Map<Integer, Subtask> getSubtasksMap();
+
+     Set<Task> getTasksTreeSet();
+
+     Map<Integer, Epic> getEpicsMap();
 
      void saveEpic(Epic epic);
 
