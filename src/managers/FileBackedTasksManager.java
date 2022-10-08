@@ -21,48 +21,36 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         Task task1 = new Task("Спринт1", TaskStatus.NEW, "учу1", LocalDateTime.of(2022, 9, 25, 13, 30, 15), Duration.ofMinutes(20));
         Task task2 = new Task("Спринт2", TaskStatus.NEW, "учу2", LocalDateTime.of(2022, 9, 26, 13, 30, 15), Duration.ofMinutes(20));
-       // Task task3 = new Task("Спринт3", TaskStatus.NEW, "учу3", Duration.ofMinutes(20));
-      //  Task task4 = new Task("Спринт4", TaskStatus.NEW, "учу4", Duration.ofMinutes(20));
-      //  Task task5 = new Task("Спринт5", TaskStatus.NEW, "учу5", Duration.ofMinutes(20));
-     //   Task task6 = new Task("Спринт6", TaskStatus.NEW, "учу6", Duration.ofMinutes(20));
 
         Epic epic1 = new Epic("Тренировка1", TaskStatus.DONE, "Тренировка1");
         Epic epic2 = new Epic("Тренировка2", TaskStatus.NEW, "Тренировка2");
 
         Subtask subTask1 = new Subtask("Прийти в зал1", TaskStatus.DONE, "переодеться1", 3, LocalDateTime.of(2022, 9, 27, 13, 30, 15), Duration.ofMinutes(60));
         Subtask subTask2 = new Subtask("Прийти в зал2", TaskStatus.DONE, "переодеться2", 3, LocalDateTime.of(2022, 9, 27, 14, 30, 15), Duration.ofMinutes(50));
-     //   Subtask subTask3 = new Subtask("Прийти в зал3", TaskStatus.NEW, "переодеться3", 7);
 
 
         manager.saveTask(task1);
         manager.saveTask(task2);
-//        manager.saveTask(task3);
-//        manager.saveTask(task4);
-//        manager.saveTask(task5);
-//        manager.saveTask(task6);
+
 
         manager.saveEpic(epic1);
         manager.saveEpic(epic2);
 
         manager.saveSubtask(subTask1);
         manager.saveSubtask(subTask2);
-    //    manager.saveSubtask(subTask3);
+
 
 
 
         manager.getTask(1);
         manager.getTask(2);
-//        manager.getTask(3);
-//        manager.getTask(4);
-//        manager.getTask(5);
-//        manager.getTask(6);
+
 
         manager.getEpic(3);
         manager.getEpic(4);
 
         manager.getSubtask(5);
         manager.getSubtask(6);
-      //  manager.getSubtask(11);
 
 
         FileBackedTasksManager fileBackedTasksManager2 = FileBackedTasksManager.loadFromFile("resources\\data.csv");
@@ -85,7 +73,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
 
-    private final static String PATH = "resources\\data.csv";  // тут надо с адресом поработать
+    private final static String PATH = "resources\\data.csv";
 
 
 

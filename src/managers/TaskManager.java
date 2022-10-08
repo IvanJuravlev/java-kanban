@@ -20,6 +20,12 @@ public interface TaskManager {
 
      Set<Task> getTasksTreeSet();
 
+     List<Task> getTaskList();
+
+     List<Epic> getEpicList();
+
+     List<Subtask> getSubtaskList();
+
      Map<Integer, Epic> getEpicsMap();
 
      void saveEpic(Epic epic);

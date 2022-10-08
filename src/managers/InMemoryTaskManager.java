@@ -80,6 +80,21 @@ public class InMemoryTaskManager implements TaskManager {
         return getPrioritizedTasks;
     }
 
+    @Override
+    public List<Task> getTaskList(){
+        return new ArrayList<>(taskMap.values());
+    }
+
+    @Override
+    public List<Epic> getEpicList(){
+        return new ArrayList<>(epicMap.values());
+    }
+
+    @Override
+    public List<Subtask> getSubtaskList(){
+        return new ArrayList<>(subtaskMap.values());
+    }
+
 
 
 

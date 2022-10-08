@@ -113,13 +113,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
     @Test
-    void removeAllTasksTest() { ///ПЕРЕПИСАТЬ!!!!!!!!!!
+    void removeAllTasksTest() {
         Task task1 = new Task("Спринт1", TaskStatus.NEW, "учу1",
                 LocalDateTime.of(2020, 9, 25, 13, 30, 15), Duration.ofMinutes(20));
         manager.saveTask(task1);
         Task task2 = new Task("Спринт2", TaskStatus.NEW, "учу2",
                 LocalDateTime.of(2020, 9, 25, 13, 55, 15), Duration.ofMinutes(20));
         manager.saveTask(task2);
+        manager.removeAllTasks();
         assertTrue(manager.getTaskMap().isEmpty());
     }
 
@@ -131,7 +132,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
          Subtask subTask1 = new Subtask("Прийти в зал1", TaskStatus.NEW, "переодеться1", 1,
                  LocalDateTime.of(2022, 9, 26, 21, 0), Duration.ofMinutes(30));
          Subtask subTask2 = new Subtask("Прийти в зал2", TaskStatus.NEW, "переодеться2", 1,
-                 LocalDateTime.of(2022, 9, 26, 23, 0), Duration.ofMinutes(30));
+                 LocalDateTime.of(2022, 9, 26, 22, 0), Duration.ofMinutes(30));
         manager.saveSubtask(subTask1);
          manager.saveSubtask(subTask2);
 
