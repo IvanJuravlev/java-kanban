@@ -73,7 +73,6 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksM
         FileBackedTasksManager loadFromFile = FileBackedTasksManager.loadFromFile(PATH);
 
         assertEquals(0, loadFromFile.getHistory().size());
-      //  assertEquals(0, loadFromFile.getTaskList().size());
 
     }
 }

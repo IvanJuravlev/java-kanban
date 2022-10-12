@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.ArrayList;
 import exception.ManagerSaveException;
 import tasks.*;
-import java.time.LocalDateTime;
+
 
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
@@ -170,7 +170,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
                         break;
                     case "SUBTASK" :
-                        //tasks.Task tas2k = fromString(taskContent);
                         Subtask subtask = (Subtask) taskFromString(taskContent);
                         tasksManager.subtaskMap.put(subtask.getTaskId(), subtask);
                         historyMap.put(subtask.getTaskId(), subtask);
@@ -249,7 +248,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         String epic;
         String startTime = String.valueOf(task.getStartTime());
         String duration = String.valueOf(task.getDuration());
-      //  String endTime = String.valueOf(task.getEndTime());
+
 
         if (task instanceof Epic) {
             type = TaskTypes.EPIC.name();
