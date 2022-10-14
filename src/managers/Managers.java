@@ -1,5 +1,7 @@
 package managers;
 
+import servers.HTTPTaskManager;
+
 public class Managers {
 
     public static HistoryManager getDefaultHistory() {
@@ -7,7 +9,7 @@ public class Managers {
     }
 
     public static TaskManager getDefault() {
-        return new InMemoryTaskManager();
+        return new HTTPTaskManager("http://localhost:8078");
     }
 
     public static FileBackedTasksManager getDefaultFileManager(){
