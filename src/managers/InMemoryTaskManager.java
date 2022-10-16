@@ -97,6 +97,13 @@ public class InMemoryTaskManager implements TaskManager {
         @Override
         public void saveTask(Task task) {
             task.setTaskId(++idCounter);
+            if (task.getDuration() == null) {
+                task.setDuration(Duration.ZERO);
+            }
+
+            if (task.getTaskStatus() == null) {
+                task.setTaskStatus(TaskStatus.NEW);
+            }
             if(task.getTaskStatus().equals(TaskStatus.NEW)
                     || task.getTaskStatus().equals(TaskStatus.DONE)
                     || task.getTaskStatus().equals(TaskStatus.IN_PROGRESS)){

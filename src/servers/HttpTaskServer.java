@@ -43,15 +43,15 @@ public class HttpTaskServer {
         httpServer = HttpServer.create();
         httpServer.bind(new InetSocketAddress(PORT), 0);
         httpServer.createContext("/tasks", new Handler());
-        Task task1 = new Task("Спринт1", TaskStatus.NEW, "учу1", LocalDateTime.of(2022, 9, 25, 13, 30, 15), Duration.ofMinutes(20));
-        taskManager.saveTask(task1);
+        //Task task1 = new Task("Спринт1", TaskStatus.NEW, "учу1", LocalDateTime.of(2022, 9, 25, 13, 30, 15), Duration.ofMinutes(20));
+     //   taskManager.saveTask(task1);
     }
 
     public void start() {
         httpServer.start();
     }
 
-    void stop() {
+    public void stop() {
         httpServer.stop(1);
     }
 
@@ -138,7 +138,7 @@ public class HttpTaskServer {
 
                             } else if (path.endsWith("tasks/subtask")) {
                                 Subtask newSubTask = gson.fromJson(body, Subtask.class);
-                                List<Epic> epics = taskManager.getEpicList();
+                               // List<Epic> epics = taskManager.getEpicList();
                                 Epic epicForSubTask = null;
 
                                 taskManager.saveSubtask(newSubTask);
