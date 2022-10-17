@@ -13,18 +13,13 @@ import tasks.TaskStatus;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class HTTPTaskManagerTest {
 
-//    private Task task1;
-//    private Task task2;
-//    private Epic epic1;
-//    private Subtask subTask1;
-//    private Subtask subTask2;
+
     private HTTPTaskManager manager;
     private static KVServer kvServer;
 
@@ -32,25 +27,16 @@ class HTTPTaskManagerTest {
     public static void beforeAll() throws IOException {
         kvServer = new KVServer();
         kvServer.start();
+
     }
 
     @BeforeEach
     public void beforeEach() {
         manager = (HTTPTaskManager) Managers.getDefault();
-
-  //      Task task1 = new Task("Спринт1", TaskStatus.NEW, "учу1",
-    //            LocalDateTime.of(2020, 9, 25, 13, 30, 15), Duration.ofMinutes(20));
-//        Task task2 = new Task("Спринт2", TaskStatus.NEW, "учу2",
-//                LocalDateTime.of(2020, 9, 25, 13, 55, 15), Duration.ofMinutes(20));
-//        Epic epic1 = new Epic("Тренировка1", TaskStatus.IN_PROGRESS, "Тренировка1");
-//        Subtask subTask1 = new Subtask("Прийти в зал1", TaskStatus.NEW, "переодеться1", 3,
-//                LocalDateTime.of(2022, 9, 26, 21, 0), Duration.ofMinutes(30));
-//        Subtask subTask2 = new Subtask("Прийти в зал2", TaskStatus.NEW, "переодеться2", 3,
-//                LocalDateTime.of(2022, 9, 26, 23, 0), Duration.ofMinutes(30));
     }
 
     @Test
-    public void shouldSaveAndRestoreAnEmptyTaskList() {
+    public void saveAndRestoreEmptyTaskListTest() {
         Task task1 = new Task("Спринт1", TaskStatus.NEW, "учу1",
                 LocalDateTime.of(2020, 9, 25, 13, 30, 15), Duration.ofMinutes(20));
         manager.saveTask(task1);
@@ -65,21 +51,20 @@ class HTTPTaskManagerTest {
     }
 
     @Test
-    public void shouldSaveAndRestoreEpicWithoutSubtasks() {
+    public void saveAndRestoreEpicTest() {
         Epic epic1 = new Epic("Тренировка1", TaskStatus.IN_PROGRESS, "Тренировка1");
-        List<Task> epicList = new ArrayList<>(List.of(epic1));
 
         manager.saveEpic(epic1);
 
         manager = (HTTPTaskManager) Managers.getDefault();
         manager.loadFromServer();
 
-        assertEquals(epicList.size(), manager.getEpicList().size());
+        assertEquals(1, manager.getEpicList().size());
         assertEquals(List.of(), manager.getSubtaskList());
     }
 
     @Test
-    public void shouldSaveAndRestoreAnEmptyHistoryList() {
+    public void saveAndRestoreHistoryListTest() {
 
         Task task1 = new Task("Спринт1", TaskStatus.NEW, "учу1",
                             LocalDateTime.of(2020, 9, 25, 13, 30, 15), Duration.ofMinutes(20));
@@ -103,7 +88,7 @@ class HTTPTaskManagerTest {
     }
 
     @Test
-    public void shouldSaveAndLoadTasks() {
+    public void saveAndLoadTasksTest() {
 
         Task task2 = new Task("Спринт2", TaskStatus.NEW, "учу2",
                 LocalDateTime.of(2020, 9, 25, 13, 55, 15), Duration.ofMinutes(20));

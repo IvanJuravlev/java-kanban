@@ -1,5 +1,6 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import managers.TaskManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,17 +33,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
     private KVServer kvServer;
     private HttpTaskServer httpTaskServer;
+    private static HTTPTaskManager taskManager;
     private static Gson gson;
     private static HttpClient httpClient;
     private static final URI url = URI.create("http://localhost:8080");
-
-
-    private static Task task1;
-    private static Task task2;
-    private static Epic epic1;
-    private static Subtask subtask1;
-    private static Subtask subtask2;
-
 
 
 
@@ -52,15 +46,6 @@ import static org.junit.jupiter.api.Assertions.*;
         gson = new Gson();
         httpClient = HttpClient.newBuilder().build();
 
-        Task task1 = new Task("Спринт1", TaskStatus.NEW, "учу1",
-                LocalDateTime.of(2020, 9, 25, 13, 30, 15), Duration.ofMinutes(20));
-        Task task2 = new Task("Спринт2", TaskStatus.NEW, "учу2",
-                LocalDateTime.of(2020, 9, 25, 13, 55, 15), Duration.ofMinutes(20));
-        Epic epic1 = new Epic("Тренировка1", TaskStatus.IN_PROGRESS, "Тренировка1");
-        Subtask subTask1 = new Subtask("Прийти в зал1", TaskStatus.NEW, "переодеться1", 3,
-                LocalDateTime.of(2022, 9, 26, 21, 0), Duration.ofMinutes(30));
-        Subtask subTask2 = new Subtask("Прийти в зал2", TaskStatus.NEW, "переодеться2", 3,
-                LocalDateTime.of(2022, 9, 26, 23, 0), Duration.ofMinutes(30));
     }
 
     @BeforeEach
@@ -69,17 +54,34 @@ import static org.junit.jupiter.api.Assertions.*;
         kvServer.start();
         httpTaskServer = new HttpTaskServer();
         httpTaskServer.start();
+        taskManager = (HTTPTaskManager)httpTaskServer.getTaskManager();
     }
 
     @AfterEach
     public void afterEach(){
         kvServer.stop();
         httpTaskServer.stop();
+
     }
 
 
     @Test
     void PostMethodTest() throws IOException, InterruptedException {
+
+        Task task1 = new Task("Спринт2", TaskStatus.NEW, "учу2",
+                LocalDateTime.of(2020, 9, 25, 13, 55, 15), Duration.ofMinutes(20));
+        httpTaskServer.getTaskManager().saveTask(task1);
+        Epic epic1 = new Epic("Тренировка1", TaskStatus.IN_PROGRESS, "Тренировка1");
+        httpTaskServer.getTaskManager().saveEpic(epic1);
+        Subtask subtask1 = new Subtask("Прийти в зал1", TaskStatus.NEW, "переодеться1", 2,
+                LocalDateTime.of(2022, 9, 26, 21, 0), Duration.ofMinutes(30));
+        httpTaskServer.getTaskManager().saveSubtask(subtask1);
+
+        Subtask subtask2 = new Subtask("Прийти в зал2", TaskStatus.NEW, "переодеться2", 2,
+                LocalDateTime.of(2022, 9, 26, 23, 0), Duration.ofMinutes(30));
+        httpTaskServer.getTaskManager().saveSubtask(subtask2);
+
+
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url + "/tasks/task"))
                 .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(task1)))
@@ -158,7 +160,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
     @Test
     void GetByIdTest() throws IOException, InterruptedException {
-        createAllTask();
+
+        Task task1 = new Task("Спринт2", TaskStatus.NEW, "учу2",
+                LocalDateTime.of(2020, 9, 25, 13, 55, 15), Duration.ofMinutes(20));
+        httpTaskServer.getTaskManager().saveTask(task1);
+        Epic epic1 = new Epic("Тренировка1", TaskStatus.IN_PROGRESS, "Тренировка1");
+        httpTaskServer.getTaskManager().saveEpic(epic1);
+        Subtask subtask1 = new Subtask("Прийти в зал1", TaskStatus.NEW, "переодеться1", 2,
+                LocalDateTime.of(2022, 9, 26, 21, 0), Duration.ofMinutes(30));
+        httpTaskServer.getTaskManager().saveSubtask(subtask1);
+
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url + "/tasks/task?id=1"))
@@ -184,13 +195,6 @@ import static org.junit.jupiter.api.Assertions.*;
         response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
-        request = HttpRequest.newBuilder()
-                .uri(URI.create(url + "/tasks/subtask/epic?id=2"))
-                .GET()
-                .build();
-
-        response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(200, response.statusCode());
 
         request = HttpRequest.newBuilder()
                 .uri(URI.create(url + "/tasks/task?id=" + 222))
@@ -203,7 +207,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
     @Test
     void GetHistoryTest() throws IOException, InterruptedException {
-        createHistory();
+
+        Task task1 = new Task("Спринт1", TaskStatus.NEW, "учу1",
+                LocalDateTime.of(2020, 9, 25, 13, 30, 15), Duration.ofMinutes(20));
+        httpTaskServer.getTaskManager().saveTask(task1);
+
+        httpTaskServer.getTaskManager().getTask(task1.getTaskId());
+
+
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url + "/tasks/history"))
@@ -216,61 +227,18 @@ import static org.junit.jupiter.api.Assertions.*;
     }
 
 
-
-    @Test
-    void DeleteMethodTest() throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url + "/tasks"))
-                .DELETE()
-                .build();
-
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(200, response.statusCode());
-
-        request = HttpRequest.newBuilder()
-                .uri(URI.create(url + "/tasks/task"))
-                .DELETE()
-                .build();
-
-        response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(200, response.statusCode());
-
-        request = HttpRequest.newBuilder()
-                .uri(URI.create(url + "/tasks/epic"))
-                .DELETE()
-                .build();
-
-        response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(200, response.statusCode());
-
-        request = HttpRequest.newBuilder()
-                .uri(URI.create(url + "/tasks/subtask"))
-                .DELETE()
-                .build();
-
-        response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(200, response.statusCode());
-
-        request = HttpRequest.newBuilder()
-                .uri(URI.create(url + "/tasks"))
-                .DELETE()
-                .build();
-
-        response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(200, response.statusCode());
-
-        request = HttpRequest.newBuilder()
-                .uri(URI.create(url + "/wrongUrl"))
-                .DELETE()
-                .build();
-
-        response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(404, response.statusCode());
-    }
-
     @Test
     void removeWithIdTest() throws IOException, InterruptedException {
-        createAllTask();
+
+        Task task1 = new Task("Спринт2", TaskStatus.NEW, "учу2",
+                LocalDateTime.of(2020, 9, 25, 13, 55, 15), Duration.ofMinutes(20));
+        httpTaskServer.getTaskManager().saveTask(task1);
+        Epic epic1 = new Epic("Тренировка1", TaskStatus.IN_PROGRESS, "Тренировка1");
+        httpTaskServer.getTaskManager().saveEpic(epic1);
+        Subtask subtask1 = new Subtask("Прийти в зал1", TaskStatus.NEW, "переодеться1", 2,
+                LocalDateTime.of(2022, 9, 26, 21, 0), Duration.ofMinutes(30));
+        httpTaskServer.getTaskManager().saveSubtask(subtask1);
+
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url + "/tasks/task?id=1"))
@@ -285,13 +253,6 @@ import static org.junit.jupiter.api.Assertions.*;
                 .DELETE()
                 .build();
 
-        response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(200, response.statusCode());
-
-        request = HttpRequest.newBuilder()
-                .uri(URI.create(url + "/tasks/subtask?id=4"))
-                .DELETE()
-                .build();
 
         response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
@@ -304,59 +265,8 @@ import static org.junit.jupiter.api.Assertions.*;
         response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
-        request = HttpRequest.newBuilder()
-                .uri(URI.create(url + "/tasks/task?id=" + 222))
-                .DELETE()
-                .build();
 
-        response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(400, response.statusCode());
     }
 
 
-    private void createAllTask() throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url + "/tasks/task"))
-                .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(task1)))
-                .build();
-
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-        request = HttpRequest.newBuilder()
-                .uri(URI.create(url + "/tasks/epic"))
-                .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(epic1)))
-                .build();
-
-        response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-        request = HttpRequest.newBuilder()
-                .uri(URI.create(url + "/tasks/subtask"))
-                .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(subtask1)))
-                .build();
-
-        response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-        request = HttpRequest.newBuilder()
-                .uri(URI.create(url + "/tasks/subtask"))
-                .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(subtask2)))
-                .build();
-
-        response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-    }
-
-    private void createHistory() throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url + "/tasks/task"))
-                .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(task1)))
-                .build();
-
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-        request = HttpRequest.newBuilder()
-                .uri(URI.create(url + "/tasks/task?id=1"))
-                .GET()
-                .build();
-
-        response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-    }
 }

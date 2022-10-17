@@ -41,6 +41,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
 
             taskMap = gson.fromJson(tasksFromJson, typeToken);
             getPrioritizedTasks.addAll(taskMap.values());
+
         }
 
         String epicsFromJson = kvTaskClient.load("tasks/epic");

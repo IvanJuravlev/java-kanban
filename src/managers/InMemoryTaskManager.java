@@ -189,7 +189,12 @@ public class InMemoryTaskManager implements TaskManager {
             taskMap.clear();
             epicMap.clear();
             subtaskMap.clear();
+        for (Task task : historyManager.getHistory()){
+            historyManager.remove(task.getTaskId());
         }
+        }
+
+
 
         @Override
         public void removeWithId(int id){

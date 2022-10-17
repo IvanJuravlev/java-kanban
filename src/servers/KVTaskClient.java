@@ -11,22 +11,36 @@ public class KVTaskClient {
     public HttpClient client;
     private String apiToken;
     protected URI url;
+
+
     public KVTaskClient(String url) {
-        this.client = HttpClient.newHttpClient();
+        register(url);
+    }
+
+    private void register(String url) {
         this.url = URI.create(url);
+        this.client = HttpClient.newHttpClient();
+
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url + "/register"))
                 .GET()
                 .build();
+
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == 200) {
                 this.apiToken = response.body();
-            } else System.out.println("Не удалось получить API_TOKEN");
-        } catch (IOException | InterruptedException | NullPointerException e) {
-            System.out.println("Ошибка регистрации");
+            } else {
+                System.out.println("Ошибка при регистрации код запроса - " + response.statusCode());
+            }
+        } catch (NullPointerException | IOException | InterruptedException e) {
+            System.out.println("Ошибка при регистрации");
         }
+
     }
+
+
+
 
     public void put(String key, String json)  {
         if (apiToken == null) {
@@ -53,7 +67,7 @@ public class KVTaskClient {
     public String load(String key) {
         String statusToLoad = null;
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url + "/load" + key + "?API_TOKEN=" + apiToken))
+                .uri(URI.create(url + "/load/" + key + "?API_TOKEN=" + apiToken))
                 .GET()
                 .build();
         try {
