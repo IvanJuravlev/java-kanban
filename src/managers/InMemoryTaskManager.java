@@ -33,15 +33,20 @@ public class InMemoryTaskManager implements TaskManager {
     protected Set<Task> getPrioritizedTasks = new TreeSet<>((o1, o2) -> {
         if (o1.getStartTime() == null && o2.getStartTime() == null) {
             return o1.getTaskId() - o2.getTaskId();
-        } if (o1.getStartTime() == null){
+        }
+        if (o1.getStartTime() == null){
             return 1;
-        } if (o2.getStartTime() == null){
+        }
+        if (o2.getStartTime() == null){
             return -1;
-        } if (o1.getStartTime().isAfter(o2.getStartTime())) {
+        }
+        if (o1.getStartTime().isAfter(o2.getStartTime())) {
             return 1;
-        } if (o1.getStartTime().isBefore(o2.getStartTime())){
+        }
+        if (o1.getStartTime().isBefore(o2.getStartTime())){
             return -1;
-        } if (o1.getStartTime().isEqual(o2.getStartTime())){
+        }
+        if (o1.getStartTime().isEqual(o2.getStartTime())){
             return o1.getTaskId() - o2.getTaskId();
         }
         return 0;
